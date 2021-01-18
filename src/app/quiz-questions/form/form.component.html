@@ -1,0 +1,561 @@
+<section id="basic-form-layouts">
+	<div class="row match-height">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="px-3">
+						<ng-container *ngIf="buildForm; else norecord">
+							<form class="form form-horizontal striped-rows" [formGroup]="quizquestionForm"
+								(submit)="onSubmit()" enctype="multipart/form-data">
+								<div class="form-body">
+									<h4 class="form-section">
+										<i class="ft-user"></i>
+										{{ title }}
+									</h4>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="title">
+												Title
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="text" formControlName="title" maxlength="1000"
+													class="form-control" id="title" autocomplete="off" />
+												<div *ngIf="submitted && quizquestionForm.get('title').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizquestionForm.get('title').errors.required">
+														 Title is required!
+													</div>
+													<div *ngIf="quizquestionForm.get('title').errors.pattern">
+														 Title format is invalid!
+													</div>
+													<div *ngIf="quizquestionForm.get('title').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizquestionForm.get('title').errors.maxlength">
+														Title too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.title" class="invalid-feedback">
+													{{ error_messages.title }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="question_type">
+												Question Type
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<select formControlName="question_type" id="question_type" class="form-control">
+													<option value="text">Text</option>
+													<option value="video">Video</option>
+													<option value="audio">Audio</option>
+													<option value="image">Image</option>
+												</select>
+												<div *ngIf="submitted && quizquestionForm.get('question_type').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizquestionForm.get('question_type').errors.required">
+														 Question Type is required!
+													</div>
+													<div *ngIf="quizquestionForm.get('question_type').errors.pattern">
+														Question Type format is invalid!
+													</div>
+													<div *ngIf="quizquestionForm.get('question_type').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizquestionForm.get('question_type').errors.maxlength">
+														Question Type too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.question_type" class="invalid-feedback">
+													{{ error_messages.question_type }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div *ngIf="show_media_file">
+										<div class="form-group">
+											<div class="row">
+												<label class="col-md-3 pt-1" for="media_file">
+													Media File
+												</label>
+												<div class="col-md-9">
+													<input type="file" formControlName="media_file" class="form-control" accept="audio/mp3,video/mp4,image/x-png,image/gif,image/jpeg,image/jpg" id="media_file" (change)="imageChange($event.target.files)"/>
+													<br>
+													<div *ngIf="selectedImage">
+														<a href="{{selectedImage}}">Previously selected Image</a>
+													</div>
+													<div *ngIf="submitted && quizquestionForm.get('media_file').errors"
+														class="invalid-feedback">
+														<div *ngIf="quizquestionForm.get('media_file').errors.required">
+															Media File is mandatory!
+														</div>
+														<div *ngIf="quizquestionForm.get('media_file').errors.pattern">
+															Media File format is invalid!
+														</div>
+														<div *ngIf="quizquestionForm.get('media_file').errors.minlength">
+															Please Enter atleast 3 Characters!
+														</div>
+														<div *ngIf="quizquestionForm.get('media_file').errors.maxlength">
+															Media File too long!
+														</div>
+													</div>
+													
+													<div *ngIf="error_messages.media_file" class="invalid-feedback">
+														{{ error_messages.media_file }}
+													</div>
+												</div>
+												
+											</div>
+										</div>
+
+										<div class="form-group" *ngIf="show_video_type">
+											<div class="row">
+												<label class="col-md-3 pt-1" for="video_type">
+													Video Type
+												</label>
+												<div class="col-md-9">
+													<select formControlName="video_type" id="video_type" class="form-control">
+														<option value="youtube">Youtube</option>
+														<option value="vimeo">Vimeo</option>
+													</select>
+													<div *ngIf="submitted && quizquestionForm.get('video_type').errors"
+														class="invalid-feedback">
+														<div *ngIf="quizquestionForm.get('video_type').errors.required">
+															Video Type is mandatory!
+														</div>
+														<div *ngIf="quizquestionForm.get('video_type').errors.pattern">
+															Video Type format is invalid!
+														</div>
+														<div *ngIf="quizquestionForm.get('video_type').errors.minlength">
+															Please Enter atleast 3 Characters!
+														</div>
+														<div *ngIf="quizquestionForm.get('video_type').errors.maxlength">
+															Video Type too long!
+														</div>
+													</div>
+													
+													<div *ngIf="error_messages.video_type" class="invalid-feedback">
+														{{ error_messages.video_type }}
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group" *ngIf="show_video_link">
+											<div class="row">
+												<label class="col-md-3 pt-1" for="video_link_id">
+													Video Link
+												</label>
+												<div class="col-md-9">
+													<input type="text" formControlName="video_link_id" id="video_link_id" class="form-control">
+													<div *ngIf="submitted && quizquestionForm.get('video_link_id').errors"
+														class="invalid-feedback">
+														<div *ngIf="quizquestionForm.get('video_link_id').errors.required">
+															Video Link ID is mandatory!
+														</div>
+														<div *ngIf="quizquestionForm.get('video_link_id').errors.pattern">
+															Video Link ID format is invalid!
+														</div>
+														<div *ngIf="quizquestionForm.get('video_link_id').errors.minlength">
+															Please Enter atleast 3 Characters!
+														</div>
+														<div *ngIf="quizquestionForm.get('video_link_id').errors.maxlength">
+															Video Link ID too long!
+														</div>
+													</div>
+													
+													<div *ngIf="error_messages.video_link_id" class="invalid-feedback">
+														{{ error_messages.video_link_id }}
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="settings">
+												Settings
+											</label>
+										</div>
+										<div class="row">
+											<label class="col-md-3 pt-1" for="is_required">
+												Is Required
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-3">
+												<!-- <div class="input-group">
+													<ui-switch defaultBgColor='#ff4d4d' labelOn="Yes" labelOff="No" formControlName="is_required">
+													</ui-switch>
+												</div> -->
+												<select class="form-control" formControlName="is_required" id="is_required">
+													<option value="true">True</option>
+													<option value="false">False</option>
+												</select>
+												<div *ngIf="submitted && quizquestionForm.get('is_required').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizquestionForm.get('is_required').errors.required">
+														Is Required is mandatory!
+													</div>
+													<div *ngIf="quizquestionForm.get('is_required').errors.pattern">
+														Is Required format is invalid!
+													</div>
+													<div *ngIf="quizquestionForm.get('is_required').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizquestionForm.get('is_required').errors.maxlength">
+														Is Required too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.is_required" class="invalid-feedback">
+													{{ error_messages.is_required }}
+												</div>
+											</div>
+											<label class="col-md-3 pt-1" for="input_answer_type">
+												Input Answer Type
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-3">
+												<select formControlName="input_answer_type" id="input_answer_type" class="form-control">
+													<option value="audio">Audio</option>
+													<option value="multiple_choices">Multiple Choice</option>
+													<option value="radio">Radio</option>
+													<option value="text">Text</option>
+													<option value="video">Video</option>
+													<!-- <option value="dropdown">Dropdown</option> -->
+												</select>
+												<div *ngIf="submitted && quizquestionForm.get('input_answer_type').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizquestionForm.get('input_answer_type').errors.required">
+														Input Answer Type is required!
+													</div>
+													<div *ngIf="quizquestionForm.get('input_answer_type').errors.pattern">
+														Input Answer Type format is invalid!
+													</div>
+													<div *ngIf="quizquestionForm.get('input_answer_type').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizquestionForm.get('input_answer_type').errors.maxlength">
+														Input Answer Type too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.input_answer_type" class="invalid-feedback">
+													{{ error_messages.input_answer_type }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="marks">
+												Marks
+											</label>
+										</div>
+										<div class="row">
+											<label class="col-md-3 pt-1" for="positive">
+												Positive
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-3">
+												<input type="text" formControlName="positive" id="positive" class="form-control">
+												<div *ngIf="submitted && quizquestionForm.get('positive').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizquestionForm.get('positive').errors.required">
+														Positive Marking is required!
+													</div>
+													<div *ngIf="quizquestionForm.get('positive').errors.pattern">
+														Positive Marking format is invalid!
+													</div>
+													<div *ngIf="quizquestionForm.get('positive').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizquestionForm.get('positive').errors.maxlength">
+														Positive Marking too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.positive" class="invalid-feedback">
+													{{ error_messages.positive }}
+												</div>
+											</div>
+											<label class="col-md-3 pt-1" for="negative" *ngIf="quizquestionForm.get('input_answer_type').value !== 'audio' && quizquestionForm.get('input_answer_type').value !== 'video' && quizquestionForm.get('input_answer_type').value !== 'text'" >
+												Negative
+											</label>
+											<div class="col-md-3" *ngIf="quizquestionForm.get('input_answer_type').value !== 'audio' && quizquestionForm.get('input_answer_type').value !== 'video' && quizquestionForm.get('input_answer_type').value !== 'text'">
+												<input type="text" formControlName="negative" id="negative" class="form-control">
+												<div *ngIf="submitted && quizquestionForm.get('negative').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizquestionForm.get('negative').errors.required">
+														Negative Marking is required!
+													</div>
+													<div *ngIf="quizquestionForm.get('negative').errors.pattern">
+														Negative Marking format is invalid!
+													</div>
+													<div *ngIf="quizquestionForm.get('negative').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizquestionForm.get('negative').errors.maxlength">
+														Negative Marking too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.negative" class="invalid-feedback">
+													{{ error_messages.negative }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="sort_order">
+												Sort Order
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="number" min="1" max="20" class="form-control" formControlName="sort_order" id="sort_order" >
+												<div *ngIf="submitted && quizquestionForm.get('sort_order').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizquestionForm.get('sort_order').errors.required">
+														Sort Order is required!
+													</div>
+													<div *ngIf="quizquestionForm.get('sort_order').errors.pattern">
+														Sort Order format is invalid!
+													</div>
+													<div *ngIf="quizquestionForm.get('sort_order').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizquestionForm.get('sort_order').errors.maxlength">
+														Sort Order too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.sort_order" class="invalid-feedback">
+													{{ error_messages.sort_order }}
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div *ngIf="quizquestionForm.get('input_answer_type').value !== 'audio' && quizquestionForm.get('input_answer_type').value !== 'video' && quizquestionForm.get('input_answer_type').value !== 'text'" >
+										
+										<div class="form-group">
+											<div formArrayName="inputs" *ngFor="let item of quizquestionForm.get('inputs')['controls']; let index = index;">
+												<ng-container [formGroupName]="index">
+													<div class="row">
+														<label class="col-md-3 pt-1" for="answers">
+															Answers
+														</label>
+													</div>
+													<input type="hidden" formControlName="answer_id" id="answer_id">
+													<div class="row">
+														<label class="col-md-3 pt-1" for="type">
+															Type
+															<span style="color:red;">*</span>
+														</label>
+														<div class="col-md-3">
+															<select formControlName="type" id="type" class="form-control">
+																<option value="text">Text</option>
+																<option value="image">Image</option>
+																<!-- <option value="video">Video</option>
+																<option value="audio">Audio</option> -->
+															</select>
+															<div *ngIf="submitted && item.get('type').errors"
+																class="invalid-feedback">
+																<div *ngIf="item.get('type').errors.required">
+																	Type is required!
+																</div>
+																<div *ngIf="item.get('type').errors.pattern">
+																	Type format is invalid!
+																</div>
+																<div *ngIf="item.get('type').errors.minlength">
+																	Please Enter atleast 3 Characters!
+																</div>
+																<div *ngIf="item.get('type').errors.maxlength">
+																	Type too long!
+																</div>
+															</div>
+														</div>
+														<label class="col-md-3 pt-1" for="valid">
+															Valid
+														</label>
+														<div class="col-md-3">
+															<select class="form-control" formControlName="valid" id="valid">
+																<option value="true">True</option>
+																<option value="false">False</option>
+															</select>
+															<div *ngIf="submitted && item.get('valid').errors"
+																class="invalid-feedback">
+																<div *ngIf="item.get('valid').errors.required">
+																	Valid is required!
+																</div>
+																<div *ngIf="item.get('valid').errors.pattern">
+																	Valid format is invalid!
+																</div>
+																<div *ngIf="item.get('valid').errors.minlength">
+																	Please Enter atleast 3 Characters!
+																</div>
+																<div *ngIf="item.get('valid').errors.maxlength">
+																	Valid too long!
+																</div>
+															</div>															
+														</div>
+													</div>
+													<br>
+													<div class="row">
+														<label class="col-md-3 pt-1" for="value">
+															Value
+															<span style="color:red;">*</span>
+														</label>
+														<div class="col-md-9 ">
+															<input type="text" formControlName="value" id="value" class="form-control"/>
+															<div *ngIf="submitted && item.get('value').errors"
+																class="invalid-feedback">
+																<div *ngIf="item.get('value').errors.required">
+																	Value is required!
+																</div>
+																<div *ngIf="item.get('value').errors.pattern">
+																	Value format is invalid!
+																</div>
+																<div *ngIf="item.get('value').errors.minlength">
+																	Please Enter atleast 3 Characters!
+																</div>
+																<div *ngIf="item.get('value').errors.maxlength">
+																	Value too long!
+																</div>
+															</div>
+														</div>
+													</div>
+													<br>
+													<div class="row" *ngIf="item.controls.type.value !== 'text'">
+														<label class="col-md-3 pt-1" for="media_file">
+															Media File
+														</label>
+														<div class="col-md-9">	
+															<input type="file" formControlName="media_file" id="media_file" class="form-control" accept="audio/mp3,video/mp4,image/x-png,image/gif,image/jpeg,image/jpg" (change)="quizImageChange($event.target.files)"/>
+															<div *ngIf="submitted && item.get('media_file').errors"
+																class="invalid-feedback">
+																<div *ngIf="item.get('media_file').errors.required">
+																	Media File is required!
+																</div>
+																<div *ngIf="item.get('media_file').errors.pattern">
+																	Media File format is invalid!
+																</div>
+																<div *ngIf="item.get('media_file').errors.minlength">
+																	Please Enter atleast 3 Characters!
+																</div>
+																<div *ngIf="item.get('media_file').errors.maxlength">
+																	Media File too long!
+																</div>
+															</div>
+														</div>
+													</div>
+													<br>
+													<div *ngIf="item.controls.type.value === 'video'">
+														<div class="row">
+															<label class="col-md-3 pt-1" for="video_type">
+																Video Type
+															</label>
+															<div class="col-md-9">
+																<select formControlName="video_type" id="video_type" class="form-control">
+																	<option value="youtube">Youtube</option>
+																	<option value="vimeo">Vimeo</option>
+																</select>
+																<div *ngIf="submitted && item.get('video_type').errors"
+																	class="invalid-feedback">
+																	<div *ngIf="item.get('video_type').errors.required">
+																		Video Type is required!
+																	</div>
+																	<div *ngIf="item.get('video_type').errors.pattern">
+																		Video Type format is invalid!
+																	</div>
+																	<div *ngIf="item.get('video_type').errors.minlength">
+																		Please Enter atleast 3 Characters!
+																	</div>
+																	<div *ngIf="item.get('video_type').errors.maxlength">
+																		Video Type too long!
+																	</div>
+																</div>
+															</div>
+														</div>
+														<br>
+														<div class="row">
+															<label class="col-md-3 pt-1" for="video_link_id">
+																Video Link
+															</label>
+															<div class="col-md-9">
+																<input type="text" formControlName="video_link_id" id="video_link_id" class="form-control">
+																<div *ngIf="submitted && item.get('video_link_id').errors"
+																	class="invalid-feedback">
+																	<div *ngIf="item.get('video_link_id').errors.required">
+																		Video Link ID is required!
+																	</div>
+																	<div *ngIf="item.get('video_link_id').errors.pattern">
+																		Video Link ID format is invalid!
+																	</div>
+																	<div *ngIf="item.get('video_link_id').errors.minlength">
+																		Please Enter atleast 3 Characters!
+																	</div>
+																	<div *ngIf="item.get('video_link_id').errors.maxlength">
+																		Video Link ID too long!
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													
+													<br>
+													<div class="float-right">
+														<button type="button" (click)="onRemoveInput(index)" class="form-control" *ngIf="inputs.length!==1">Remove Row</button>
+													</div>
+												</ng-container>
+											</div>
+										</div>
+										<br>
+										<div class="row" *ngIf="quizquestionForm.get('input_answer_type').value !== 'audio' && quizquestionForm.get('input_answer_type').value !== 'video' && quizquestionForm.get('input_answer_type').value !== 'text'" >
+											<div class="col-md-8"></div>
+											<div class="col-md-4 text-right">
+											<button type="button" class="form-control" (click)="onAddInput(true)">Add Row +</button>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-actions center">
+										<div class="col-md-3"></div>
+										<div class="col-sm-9">
+											<a [routerLink]="['/quiz-questions']" [queryParams]="{quiz_id:quiz_id,campaign_id: campaign_id, course_id:course_id}" class="btn btn-raised btn-orange mr-1">
+												<i class="ft-x"></i>
+												Cancel
+											</a>
+
+											<button type="submit" class="btn btn-raised btn-primary">
+												<i class="fa fa-check-square-o"></i>
+												Save
+											</button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</ng-container>
+
+						<ng-template #norecord>
+							<p>Loading Data...</p>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

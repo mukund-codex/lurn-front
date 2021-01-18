@@ -1,0 +1,84 @@
+<section id="simple-table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-shadow-0">
+        <div class="card-header">
+          <h4 class="card-title">Master Mapping</h4>
+          <app-actionbtns [addRedirect]="'/masterfile-mapping/add'" [showExport]="false" [showImport]="false">
+          </app-actionbtns>
+        </div>
+
+        <div class="card-body">
+          <p *ngIf="message">{{ message.text }}</p>
+          <div class="card-block">
+            <form name="searchForm" #searchForm="ngForm">
+              <div class="table-responsive">
+                <table class="table table-bordered table-condensed">
+                  <thead>
+                    <tr>
+                      <th>Action</th>
+                      <th>Company Name</th>
+                      <th>Campaign Name</th>
+                      <th>Camp Name</th>
+                      <th>Module Name</th>
+                      <th>Template Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                      <td>
+                        <input type="text" name="company_name" ngModel class="form-control" placeholder="Company Name"
+                          autocomplete="off" />
+                      </td>
+                      <td>
+                        <input type="text" name="campaign_name" ngModel class="form-control" placeholder="Campaign Name"
+                          autocomplete="off" />
+                      </td>
+                      <td>
+                        <input type="text" name="camp_name" ngModel class="form-control" placeholder="Camp Name"
+                          autocomplete="off" />
+                      </td>
+                      <td>
+                        <input type="text" name="module_name" ngModel class="form-control" placeholder="Module Name"
+                          autocomplete="off" />
+                      </td>
+                      <td>
+                        <input type="text" name="template_name" ngModel class="form-control" placeholder="Template Name"
+                          autocomplete="off" />
+                      </td>
+                    </tr>
+
+                    <ng-container *ngIf="(records) as result; else loading">
+                      <tr *ngIf="!records.data.length">
+                        <td [attr.colSpan]="6">No Records Found!</td>
+                      </tr>
+                      <tr *ngFor="let row of result.data; let i=index">
+                        <td>
+                          <a class="ng2-smart-action ng2-smart-action-edit-edit" [routerLink]="['/masterfile-mapping/edit/' + row.id]">
+                            <i class="ft-edit-2 info font-medium-1 mr-2"></i>
+                          </a>
+                          <a class="ng2-smart-action ng2-smart-action-delete-delete" (click)="delete(row.id)">
+                            <i class="ft-x danger font-medium-1 mr-2"></i>
+                          </a>
+                        </td>
+
+                        <!-- <td>{{ row.camp?.campaigns[0].company.name }}</td>
+                        <td>{{ row.camp?.campaigns[0].name }}</td>
+                        <td>{{ row.camp?.name }}</td> -->
+                        <td>{{ row.module.name }}
+                        </td>
+                        <!-- <td>{{ row.customizable.name }}</td> -->
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </form>
+            <ng-template #loading>Loading Camp Data</ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,147 @@
+<div style="min-height: calc(100vh - 75px);">
+	<!-- <app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar> -->
+	<section id="simple-table">
+		<div class="row">
+
+			<div class="col-sm-12">
+				<div class="card card-border-shadow-0">
+					
+					<div class="col-md-4 pt-2">
+						<ng-container *ngIf="(sectionData | async) as resultData">
+						  <ng-multiselect-dropdown [(ngModel)]="section_id"
+							[placeholder]=" 'Select Section'" (onSelect)="searchSection($event)" (onDeSelect)="searchSection($event)" [settings]="dropdownSettingsCompany" [data]="resultData.data">
+						  </ng-multiselect-dropdown>
+						</ng-container>
+					</div>
+					<br>
+
+					<div class="card-header m-top-bottom-10">
+						<h4 class="card-title module-title">{{ title }}</h4>
+						<!-- <app-actionbtns [addRedirect]="'/lesson/add'" [showExport]="showExport" [uploadFields]="uploadFields"
+							(uploadFile)="upload($event)" (uploaded)="fileChange($event)" (download)="export()">
+						</app-actionbtns> -->
+						<!-- <app-actionbtns [addRedirect]="'/admin/users/add'" [showAdd]="showAdd" [queryParams]="{campaign_id: campaign_id,section_id:section_id}"></app-actionbtns> -->
+						<a href="/quiz/add" *ngIf="showAdd" [routerLink]="'/quiz/add'" [queryParams]="{campaign_id: campaign_id,section_id:section_id,course_id:course_id}" style="float:right;font-weight:bolder;">Add Quiz</a>
+					</div>
+
+					<swal
+						#deleteSwal
+						title="Are you sure ?"
+						text="This cannot be undone"
+						icon="question"
+						[showCancelButton]="true"
+						[focusCancel]="true">
+					</swal>
+
+					<div class="card-body">
+						<div class="card-block">
+							<div *ngIf="records" style="float:right;"><b class="tot-record">Total Records : {{ records.meta?.pagination?.total }}</b></div>
+							<form name="searchForm" #searchForm="ngForm" class="table-responsive">
+								<ng-container *ngIf="quizData; else loading">
+									<table class="table table-bordered table-condensed table-striped">
+										<thead>
+											<tr>
+												<th class="text-center"><input type="checkbox" (change)="checkAll($event)"></th>
+												<th>Action</th>
+												<th>Sr. No</th>
+												<th>Section</th>
+												<th>Questions</th>
+												<th>Title</th>
+												<th>Version</th>
+												<th>Icon</th>
+												<th>Description</th>
+												<th>Start Date</th>
+												<th>End Date</th>
+												<th>Time Limit</th>
+												<th>Duration</th>
+												<th>Passing Marks</th>
+												<th>Reattempt</th>
+												<th>Reattempt Count</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<ng-container *ngIf="records; else loading">
+												<tr *ngIf="!records.data.length">
+													<td [attr.colSpan]="10">No Records Found!</td>
+												</tr>
+												<tr *ngFor="let row of records.data; let i = index">
+													<td class="text-center"><input type="checkbox" [checked]="row.selected" data-md-icheck  id="{{row.id}}" name="deletecheck" value="{{row.id}}" (click)="selectID(row.id,$event)"></td>
+													<td>
+														<a *ngIf="showEdit" class="ng2-smart-action ng2-smart-action-edit-edit"
+															[routerLink]="['/quiz/edit/' + row.id]" [queryParams]="{campaign_id: campaign_id,section_id:section_id,course_id:course_id}">
+															<i class="ft-edit-2 info font-medium-1 mr-2"></i>
+														</a>
+														<a [swal]="deleteSwal" (confirm)="delete(row.id)" *ngIf="showDelete" class="ng2-smart-action ng2-smart-action-delete-delete">
+															<i class="ft-x danger font-medium-1 mr-2"></i>
+														</a>
+													</td>
+													<td>
+														{{ (records.meta.pagination.current_page - 1) * records.meta.pagination.per_page + i + 1 }}
+													</td>
+													<td>{{row.section_name}}</td>
+													<td>
+														<a [routerLink]="['/quiz-questions/']" [queryParams]="{course_id:course_id,campaign_id: campaign_id,quiz_id:row.id}">Questions</a>
+													</td>
+													<td>
+														{{ row.title }}
+													</td>
+													<td>
+														{{ row.version }}
+													</td>
+													
+													<td>
+														<a *ngIf="(row.icon  !== '')" href="{{ row.icon }}" target="_blank">
+															<i class="fa fa-eye" style="font-size:20px;color:blue"></i>
+														</a>
+													</td>
+													<td>
+														<div [innerHTML]="row.newStr"></div>
+													</td>
+													<td>
+														{{ row.start_date }}
+													</td>
+													<td>
+														{{ row.end_date }}
+													</td>
+													<td>
+														{{ row.time_limit }}
+													</td>
+													<td>
+														{{ row.duration }}
+													</td><td>
+														{{ row.passing_marks }}
+													</td>
+													<td>
+														{{ row.reattempt }}
+													</td><td>
+														{{ row.reattempt_count }}
+													</td>
+												</tr>
+											</ng-container>
+										</tbody>
+										<br><br>
+										<div *ngIf="SelectedIDs.length && showMultiDelete">
+											<button [swal]="deleteSwal" class="btn btn-danger" style="color:#fff !important;" (confirm)="deleteSelected()">Delete</button>
+										</div>
+										<div *ngIf="!SelectedIDs.length && showMultiDelete">
+											<button class="btn btn-danger" style="color:#fff !important;" (click)="invalidSelection()">Delete</button>
+										</div>
+										<br>
+									</table>
+								</ng-container>
+							</form>
+							<div *ngIf="records">
+								<ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+									[collectionSize]="records.meta.pagination.total"
+									[pageSize]="records.meta.pagination.per_page"
+									[(page)]="records.meta.pagination.current_page"></ngb-pagination>
+							</div>
+						</div>
+						<ng-template #loading>Loading Data...</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>

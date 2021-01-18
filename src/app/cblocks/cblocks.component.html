@@ -1,0 +1,119 @@
+<app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+
+<section id="simple-table">
+  <div class="row">
+    <div class="col-sm-12" style="margin-top:30px;">
+      <div class="card-border-shadow-0">
+        <div class="card-title" style="float:right;">
+          <button *ngIf="showExport" style="color:#fff !important;" class="btn btn-raised btn-orange m-2 ng-star-inserted" (click)="export()"><i _ngcontent-gde-c137="" class="ft-download white warning font-medium-1" style="color: #fff !important;"></i></button>
+        </div>
+        <div class="">
+          <h4 class="">Module</h4>
+          <hr/> 
+        </div>
+
+        <swal
+					#deleteSwal
+					title="Are you sure ?"
+					text="This cannot be undone"
+					icon="question"
+					[showCancelButton]="true"
+					[focusCancel]="true">
+        </swal>
+        
+        <form name="searchForm" #searchForm="ngForm" class="">
+
+        <div class="card-body" class="row">
+          
+          <ng-container *ngIf="records as result; else loading">
+            <div class="col-lg-12 col-sm-12">            
+              <div style="float:right;"><b class="tot-record">Total Records : {{ result.meta?.pagination?.total }}</b></div>
+            <div *ngIf="!result.data.length">
+              <div [attr.colSpan]="6"></div>
+            </div>
+          </div>
+            <div class="col-lg-4 col-sm-6 col-container" [routerLink]="'/cblocks/add'" [queryParams]="{campaign_id: campaign_id}">
+              <div class="card col-cell border-orange">
+                <div class="card-header text-center p-4">
+                  <img src="assets/img/logos/add-button-tp-bg.png" alt="">
+                  <h5 style="color: #F7941E;">Add Module</h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-container" *ngFor="let row of result.data; let i=index">
+              <div class="card col-cell">
+
+                <div class="row p-1">
+                  <div class="col-6 text-left">
+                     <div class="a float-left" *ngIf="row.type == 'gif'">
+                    <img src="assets/img/logos/gif-icon.png">
+                  </div>
+                  <div class="a float-left" *ngIf="row.type == 'video'">
+                    <img src="assets/img/logos/video-icon.png">
+                  </div>
+                  <div class="a float-left" *ngIf="row.type == 'image'">
+                    <img src="assets/img/logos/poster-icon.png">
+                  </div></div>
+                    <div class="col-6 text-right"> <a class="ng2-smart-action ng2-smart-action-edit-edit" [routerLink]="['/cblocks/edit/' + row.id]" [queryParams]="{campaign_id: campaign_id}">
+                      <i class="ft-edit-2 info font-medium-1 mr-2"></i>
+                    </a>
+                    <a [swal]="deleteSwal" (confirm)="delete(row.id)" *ngIf="showDelete" class="ng2-smart-action ng2-smart-action-delete-delete">
+                      <i class="ft-x danger font-medium-1 mr-2"></i>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="card-header p-1 flex-column text-center" style="flex: auto">
+                  <h4 class="a">{{ row.name }}</h4>
+                </div>
+                
+                <div class="card-block container">
+                  <div *ngIf="row.is_form_exist == true" class="p-2" style="border-top: 1px solid #f3f1f1; border-bottom: 1px solid #f3f1f1; ">
+                    <span (click)="listForms(row.id)">Form Added</span>
+                    <img class="float-right" src="assets/img/logos/green-check.png">
+                  </div>
+
+                  <div *ngIf="row.is_form_exist == false" class="p-2 text-center" style="border-top: 1px solid #f3f1f1; border-bottom: 1px solid #f3f1f1; ">
+                    <span (click)="addForm(row.id)">Add Form </span>
+                  </div>
+
+                  <div *ngIf="row.is_form_exist == true">
+                    <div class="container">
+                      <div class="row" *ngIf="row.type == 'video' || row.type == 'gif'">
+                        <div class="col-lg-6 col-sm-6 col-6 text-center p-1" style="border-right: 1px solid #f3f1f1;border-bottom: 1px solid #f3f1f1;">
+                          <span class="file-counter-container" (click)="listMasterFile(row.id)">{{ row.masterfile_count }}</span><br/>
+                          Master Files
+                        </div>
+
+                        <div class="col-lg-6 col-sm-6 col-6 text-center p-1" style="border-bottom: 1px solid #f3f1f1;">
+                          <span (click)="addMasterFile(row.id)"><img src="assets/img/logos/add-button-tp-bg.png"></span><br/>
+                          Master File
+                        </div>
+                      </div>
+
+                      <div class="container">
+                        <div class="row" *ngIf="row.type == 'image'">
+                          <div class="col-lg-6 col-sm-6 col-6 text-center  p-2" style="border-right: 1px solid #f3f1f1;">
+                            <span class="file-counter-container" (click)="listTemplate(row.id)">{{ row.template_count }}</span><br/>
+                            Templates
+                          </div>
+
+                          <div class="col-lg-6 col-sm-6 col-6 text-center p-1" style="border-bottom: 1px solid #f3f1f1;">
+                            <span (click)="addTemplate(row.id)"><img src="assets/img/logos/add-button-tp-bg.png"></span><br/>
+                            Template
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #loading>Loading Data...</ng-template>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</section>

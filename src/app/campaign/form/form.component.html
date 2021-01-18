@@ -1,0 +1,165 @@
+<section id="basic-form-layouts">
+    <div class="card row match-height">
+          <div class="col-md-12 p-0">
+              <ng-container *ngIf="buildForm; else norecord">
+                  <form class="form form-horizontal striped-rows" [formGroup]="campaignForm" (ngSubmit)="onSubmit()">
+                      <div class="form-body">
+                          <div class="container">
+                              <span style="color:red;"><b>Note: Geography Settings cannot be modified once added.</b></span>
+                              <div class="row">
+                                  <div class="col-md-6" style="display: flex;">
+                                      <div class="card" style="flex: 1;">
+                                          <div class="card-body">
+                                              <div class="acc-header-bg">Add Campaign <span style="float:right;"> Code : {{ campaign_code }} </span> </div>
+                                              <div class="form-group">
+                                                  <div class="row">
+                                                      <label class="col-md-12 pt-1" for="campaign_name">Campaign Name
+                                                          <span style="color:red;">*</span>
+                                                      </label>
+                                                      <div class="col-md-12">
+                                                          <input type="text" formControlName="campaign_name" maxlength="50" class="form-control"
+                                                              [ngClass]="{ 'is-invalid': submitted && f.campaign_name.errors }" />
+                                                          <div *ngIf="submitted && f.campaign_name.errors" class="invalid-feedback">
+                                                              <div *ngIf="f.campaign_name.errors.required">
+                                                                  Campaign Name is required!
+                                                              </div>
+                                                              <div *ngIf="f.campaign_name.errors.minlength">
+                                                                  Campaign Name must be atleast 3 characters!
+                                                              </div>
+                                                              <div *ngIf="f.campaign_name.errors.maxlength">
+                                                                  Campaign Name must be less than 50 characters!
+                                                              </div>
+                                                          </div>
+                                                          
+                                                          <div *ngIf="error_messages.name" class="invalid-feedback">
+                                                              {{ error_messages.name }}
+                                                          </div>
+                                                          
+                                                          <div *ngIf="editFlag == true">
+                                                              <input type="hidden" formControlName="campaign_id">
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+  
+                                              <div class="form-group">
+                                                  <div class="row">
+                                                  <label class="col-md-12 pt-1" for="company_id">Company Name
+                                                      <span style="color:red;">*</span>
+                                                  </label>
+                                                  <div class="col-md-12">
+                                                      <ng-container *ngIf="(companyData) as resultData">
+                                                          <ng-multiselect-dropdown  [disabled]="isDropdownDisabled" (onSelect)="getProspects($event)" formControlName="company_id"
+                                                                  [placeholder]=" 'Select Company'" [settings]="dropdownSettingsCompany" [data]="resultData.data">
+                                                          </ng-multiselect-dropdown>
+                                                      </ng-container>
+                                                      <div *ngIf="submitted && f.company_id.errors" class="invalid-feedback">
+                                                          <div *ngIf="f.company_id.errors.required">Company Name is required!
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              </div>
+  
+                                              <div class="form-group">
+                                                  <div class="row">
+                                                  <label class="col-md-12 pt-1" for="prospect">Prospect
+                                                      <span *ngIf="editFlag == false" style="color:red;">*</span>
+                                                  </label>
+                                                  <div class="col-md-12">
+                                                      <ng-container *ngIf="prospectData else noProspects">
+                                                          <ng-multiselect-dropdown formControlName="prospect"
+                                                          [placeholder]=" 'Select Prospect'" [settings]="dropdownSettingsMulti" [data]="prospectData">
+                                                          </ng-multiselect-dropdown>
+                                                      </ng-container>
+                                                      <ng-template #noProspects>
+                                                        <ng-multiselect-dropdown [placeholder]=" 'Select Prospect'" 
+                                                        [settings]="dropdownSettingsMulti" [data]="[]">
+                                                        </ng-multiselect-dropdown>
+                                                      </ng-template>
+                                                      <div *ngIf="submitted && f.prospect.errors" class="invalid-feedback">
+                                                      <div *ngIf="f.prospect.errors.required">Prospect Name is required!</div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              </div>
+                                          </div>
+  
+                                      </div>
+                                  </div>
+                              <div class="col-md-6">
+                                  <div class="card">
+                                      <div class="card-body">
+                                          <span class="acc-header-bg">Geography Setting
+                                              <span style="color:red;">*</span>
+                                          </span>
+                       
+                                          <div class="form-group">
+                                              <div class="row">
+                                                  <label class="col-md-12 pt-1" for="">Geography Details</label>
+                                                  <div class="col-md-12" id="checkbox-1">
+                                                      <div formArrayName="geography">
+                                                          <ng-container *ngIf="(geographyData) as resultData">
+                                                              <div *ngFor="let row of campaignForm.controls.geography['controls']; let i = index">
+                                                                  <div class="form-group" [formGroupName]="i">
+                                                                      
+                                                                    <input type="checkbox" (change)="onChange($event, i)" formControlName="geo_master"
+                                                                          value="{{master_geography[i].id}}" id="{{master_geography[i].id}}">
+                                                                        <div style="border-bottom:1px dotted #f57c00;padding-top:2px !important;"
+                                                                            *ngIf="campaignForm.controls.geography['controls'][i]['controls'].geo_master.value === true">
+                                                                        </div>
+                                                                    <label for="{{master_geography[i].id}}">{{master_geography[i].name}}</label>
+                                                                    <br>
+                                                                    <input type="text" formControlName="label" *ngIf="campaignForm.controls.geography['controls'][i]['controls'].geo_master.value === true">
+                                                                  </div>
+                                                              </div>
+                                                          </ng-container>
+                                                        </div>
+  
+                                                        <div *ngIf="error_messages.geo_master" class="invalid-feedback">
+                                                          {{ error_messages.geo_master }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+  
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <label class="col-md-12 pt-1">Status</label>
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <ui-switch defaultBgColor='#ff4d4d' labelOn="Active" labelOff="Inactive"
+                                                              formControlName="is_active">
+                                                            </ui-switch>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              </div>
+                          </div>
+                      </div>
+  
+                      <div class="form-actions center">
+                          <button *ngIf="!campaign_id" type="button" [routerLink]="['/campaign']" class="btn btn-raised btn-orange mr-1">
+                              <i class="ft-x"></i> Cancel
+                          </button>
+                          <button *ngIf="campaign_id" type="button" [routerLink]="['/campaign-dashboard']" [queryParams]="{campaign_id: campaign_id}" class="btn btn-raised btn-orange mr-1">
+                              <i class="ft-x"></i> Cancel
+                          </button>
+                          <button type="submit" class="btn btn-raised btn-purple">
+                              <i class="fa fa-check-square-o"></i> Save
+                          </button>
+                      </div>
+                  </form>
+              </ng-container>
+  
+              <ng-template #norecord>
+                  <p>Loading Data...</p>
+              </ng-template>
+          </div>
+      </div>
+  </section>
+  

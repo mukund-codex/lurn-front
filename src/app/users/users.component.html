@@ -1,0 +1,162 @@
+<div style="min-height: calc(100vh - 75px);">
+
+<app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+<section id="simple-table">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card card-border-shadow-0">
+				<div class="card-header m-top-bottom-10">
+					<h4 class="card-title module-title">{{ title }}</h4>
+					<app-actionbtns [showAdd]="showAdd" [addRedirect]="'/manpower/users/add'" [uploadFields]="uploadFields"
+					(uploadFile)="upload($event)" [showExport]="showExport" (uploaded)="fileChange($event)"
+						(download)="export()"></app-actionbtns>
+				</div>
+
+				<swal
+					#deleteSwal
+					title="Are you sure ?"
+					text="This cannot be undone"
+					icon="question"
+					[showCancelButton]="true"
+					[focusCancel]="true">
+				</swal>
+
+				<div class="card-body">
+					<div class="card-block">
+						<div *ngIf="records" style="float:right;"><b class="tot-record">Total Records : {{ records.meta?.pagination?.total }}</b></div>
+						<form name="searchForm" #searchForm="ngForm" ngForm>
+							<div class="table-responsive">
+								<table class="table table-bordered table-condensed">
+									<thead>
+										<tr>
+											<th class="text-center">
+												<input type="checkbox" (change)="checkAll($event)" id="checkall">
+												<label for="checkall">&nbsp;</label>
+											</th>
+											<th>Action</th>
+											<th>Sr. No</th>
+											<th>Name</th>
+											<th>Mobile</th>
+											<th>Email ID</th>
+											<th>Username</th>
+											<th>Role</th>
+											<!--<th>Designation</th>-->
+											<th *ngFor="let row of geographyData">
+												{{ row.label }}
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td>
+												<input type="text" name="name" ngModel class="form-control"
+													placeholder="Name" autocomplete="off" />
+											</td>
+											<td>
+												<input type="text" name="mobile" ngModel class="form-control"
+													placeholder="Mobile" autocomplete="off" />
+											</td>
+											<td>
+												<input type="text" name="email_id" ngModel class="form-control"
+													placeholder="Email ID" autocomplete="off" />
+											</td>
+											<td>
+												<input type="text" name="username" ngModel class="form-control"
+													placeholder="Username" autocomplete="off" />
+											</td>
+											<td></td>
+											
+											<td *ngFor="let row of geographyData">
+												
+												<input *ngIf="row.name == 'National Zone'" type="text" name="national_zone" ngModel class="form-control"
+													placeholder="National Zone" autocomplete="off" />
+
+												<input *ngIf="row.name == 'Zone'" type="text" name="zone" ngModel class="form-control"
+													placeholder="Zone" autocomplete="off" />
+												<input *ngIf="row.name == 'Region'" type="text" name="region" ngModel class="form-control"
+													placeholder="Region" autocomplete="off" />
+												<input *ngIf="row.name == 'Area'" type="text" name="area" ngModel class="form-control"
+													placeholder="Area" autocomplete="off" />													
+
+												<input *ngIf="row.name == 'City'" type="text" name="city" ngModel class="form-control"
+													placeholder="City" autocomplete="off" />
+											</td>
+										</tr>
+										<ng-container *ngIf="records; else loading">
+											<tr *ngIf="!records.data.length">
+												<td [attr.colSpan]="15">No Records Found!</td>
+											</tr>
+											<tr *ngFor="let row of records.data; let i = index">
+												<td class="text-center">
+													<input type="checkbox" [checked]="row.selected" data-md-icheck  id="{{row.id}}" name="deletecheck" value="{{row.id}}" (click)="selectID(row.id,$event)">
+												<label for="{{row.id}}">&nbsp;</label>
+												</td>
+												<td>
+													<a *ngIf="showEdit" class="ng2-smart-action ng2-smart-action-edit-edit"
+														[routerLink]="['/manpower/users/edit/' + row.id]"
+														[queryParams]="{campaign_id : campaign_id}">
+														<i class="ft-edit-2 info font-medium-1 mr-2"></i>
+													</a>
+													<a [swal]="deleteSwal" (confirm)="delete(row.id)" *ngIf="showDelete" class="ng2-smart-action ng2-smart-action-delete-delete">
+														<i class="ft-x danger font-medium-1 mr-2"></i>
+													</a>
+												</td>
+												<td>
+													{{
+														(records.meta.pagination.current_page - 1) * records.meta.pagination.per_page +
+															i +
+															1
+													}}
+												</td>
+												<td>{{ row.name }}</td>
+												<td>{{ row.mobile }}</td>
+												<td>{{ row.email_id }}</td>
+												<td>{{ row.username }}</td>
+												<td>
+													<p *ngFor="let r of row.roles">{{ r.name }}</p>
+												</td>
+												<!--<td>{{ row.designation?.name }}</td>-->
+
+												<td *ngFor="let record of geographyData">
+													<span *ngIf="record.name == 'National Zone'">{{ row.geography?.national_zone?.name }}</span>
+													<span *ngIf="record.name == 'Zone'">{{ row.geography?.zone?.name }}</span>
+													<span *ngIf="record.name == 'Region'">{{ row.geography?.region?.name }}</span>
+													<span *ngIf="record.name == 'Area'">{{ row.geography?.area?.name }}</span>
+													<span *ngIf="record.name == 'City'">{{ row.geography?.city?.name }}</span>
+												</td>
+											</tr>
+										</ng-container>
+									</tbody>
+								</table>
+								<div *ngIf="SelectedIDs.length && showMultiDelete">
+									<button [swal]="deleteSwal" class="btn btn-danger" style="color:#fff !important;"
+										(confirm)="deleteSelected()">Delete</button>
+								</div>
+								<div *ngIf="!SelectedIDs.length && showMultiDelete">
+									<button class="btn btn-danger" style="color:#fff !important;" (click)="invalidSelection()">Delete</button>
+								</div>
+								<br>
+							</div>
+						</form>
+						<div *ngIf="records">
+							<ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+								[collectionSize]="records.meta.pagination.total"
+								[pageSize]="records.meta.pagination.per_page"
+								[(page)]="records.meta.pagination.current_page"></ngb-pagination>
+						</div>
+					</div>
+					<ng-template #loading>
+						<tr>
+							<td colspan="14">Loading Data...</td>
+						</tr>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+</div>

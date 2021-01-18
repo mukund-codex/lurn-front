@@ -1,0 +1,495 @@
+<div style="min-height: calc(100vh - 75px);">
+
+	<app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+	<section id="basic-form-layouts">
+		<div class="row match-height">
+			<ng-container *ngIf="buildForm; else norecord">
+				<form class="form col-12 clearfix" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+					<div class="col-md-6 col-sm-12 float-left padding-1">
+						<div class="card">
+							<div class="card-body">
+								<div class="px-3">
+									<div class="form-body">
+										<h4 class="form-section">
+											<i class="ft-map-pin"></i>
+											User Geography
+										</h4>
+
+										<div *ngIf="(typesData) as typesData">
+
+											<div class="row">
+												<div class="form-group col-12 mb-4">
+													<label for="type">
+														Type
+														<span style="color:red;">*</span>
+													</label>
+
+													<ng-multiselect-dropdown formControlName="type"
+														[disabled]="disabled" [placeholder]="'Select Type'"
+														[settings]="dropdownSettings" [data]="typesData"
+														(click)="elementTouched(user.get('type'))">
+													</ng-multiselect-dropdown>
+
+													<div *ngIf="user.get('type').errors && submitted"
+														class="invalid-feedback">
+														<div *ngIf="user.get('type').errors.required">
+															Type is required!
+														</div>
+													</div>
+													<div *ngIf="error_messages.type" class="invalid-feedback">
+														{{ error_messages.type }}
+													</div>
+													<div *ngIf="error_messages.geography_id" class="invalid-feedback">
+														User already exist for the selected geography.
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row" *ngIf="showField['National Zone']">
+											<div class="form-group col-12 mb-2">
+												<label for="national_zone">
+													National Zone
+													<span style="color:red;">*</span>
+												</label>
+
+												<ng-multiselect-dropdown formControlName="national_zone"
+													[placeholder]="'Select National Zone'" [settings]="dropdownSettings"
+													[data]="nationalZonesData"
+													(onSelect)="updateValue($event, 'National Zone')"
+													(onDeSelect)="removeValue($event, 'National Zone')"
+													(click)="elementTouched(user.get('national_zone'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="user.get('national_zone').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('national_zone').errors.required">
+														National Zone is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.national_zone" class="invalid-feedback">
+													{{ error_messages.national_zone }}
+												</div>
+											</div>
+										</div>
+
+										<div class="row" *ngIf="showField.Zone">
+											<div class="form-group col-12 mb-2">
+												<label for="zone">
+													Zone
+													<span style="color:red;">*</span>
+												</label>
+
+												<ng-multiselect-dropdown formControlName="zone"
+													[placeholder]="'Select Zone'" [settings]="dropdownSettings"
+													[data]="zonesData" (onSelect)="updateValue($event, 'Zone')"
+													(onDeSelect)="removeValue($event, 'Zone')"
+													(click)="elementTouched(user.get('zone'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="user.get('zone').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('zone').errors.required">
+														Zone is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.zone" class="invalid-feedback">
+													{{ error_messages.zone }}
+												</div>
+											</div>
+										</div>
+
+										<div class="row" *ngIf="showField.Region">
+											<div class="form-group col-12 mb-2">
+												<label for="region">
+													Region
+													<span style="color:red;">*</span>
+												</label>
+
+												<ng-multiselect-dropdown formControlName="region"
+													[placeholder]="'Select Region'" [settings]="dropdownSettings"
+													[data]="regionsData" (onSelect)="updateValue($event, 'Region')"
+													(onDeSelect)="removeValue($event, 'Region')"
+													(click)="elementTouched(user.get('region'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="user.get('region').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('region').errors.required">
+														Region is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.region" class="invalid-feedback">
+													{{ error_messages.region }}
+												</div>
+											</div>
+										</div>
+
+										<div class="row" *ngIf="showField.Area">
+											<div class="form-group col-12 mb-2">
+												<label for="area">
+													Area
+													<span style="color:red;">*</span>
+												</label>
+
+												<ng-multiselect-dropdown formControlName="area"
+													[placeholder]="'Select Area'" [settings]="dropdownSettings"
+													[data]="areaData" (onSelect)="updateValue($event, 'Area')"
+													(onDeSelect)="removeValue($event, 'Area')"
+													(click)="elementTouched(user.get('area'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="user.get('area').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('area').errors.required">
+														Area is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.area" class="invalid-feedback">
+													{{ error_messages.area }}
+												</div>
+											</div>
+										</div>
+
+										<div class="row" *ngIf="showField.City">
+											<div class="form-group col-12 mb-2">
+												<label for="city">
+													City
+													<span style="color:red;">*</span>
+												</label>
+
+												<ng-multiselect-dropdown formControlName="city"
+													[placeholder]="'Select City'" [settings]="dropdownSettings"
+													[data]="cityData" (onSelect)="updateValue($event, 'City')"
+													(onDeSelect)="removeValue($event, 'City')"
+													(click)="elementTouched(user.get('city'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="user.get('city').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('city').errors.required">
+														City is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.city" class="invalid-feedback">
+													{{ error_messages.city }}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- User Information start from here -->
+					<div class="col-md-6 col-sm-12 float-left padding-1">
+						<div class="card">
+							<div class="card-body">
+								<div class="px-3">
+									<div class="form-body">
+										<h4 class="form-section">
+											<i class="ft-user"></i>
+											User Information
+										</h4>
+
+										<div class="row">
+											<div class="form-group col-12 mb-2">
+												<label for="first_name">
+												First Name
+													<span style="color:red;">*</span>
+												</label>
+
+												<input formControlName="first_name" type="text" id="first_name" class="form-control"
+													maxlength="50" autocomplete="off" />
+												<div *ngIf="user.get('first_name').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('first_name').errors.required">
+														First Name is required!
+													</div>
+													<div *ngIf="user.get('first_name').errors.minlength">
+														First Name must be atleast 3 characters!
+													</div>
+													<div *ngIf="user.get('first_name').errors.maxlength">
+														First Name can have maximum 50 characters!
+													</div>
+													<div *ngIf="user.get('first_name').errors.pattern">
+														Please Enter a Valid first name!
+													</div>
+												</div>
+												<div *ngIf="error_messages.first_name" class="invalid-feedback">
+													{{ error_messages.first_name }}
+												</div>
+											</div>
+										</div>
+
+
+										
+										<div class="row">
+											<div class="form-group col-12 mb-2">
+												<label for="last_name">
+													Last Name
+													<span style="color:red;">*</span>
+												</label>
+
+												<input formControlName="last_name" type="text" id="last_name" class="form-control"
+													maxlength="50" autocomplete="off" />
+												<div *ngIf="user.get('last_name').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('last_name').errors.required">
+														Last Name is required!
+													</div>
+													<div *ngIf="user.get('last_name').errors.minlength">
+														Last Name must be atleast 3 characters!
+													</div>
+													<div *ngIf="user.get('last_name').errors.maxlength">
+														Last Name can have maximum 50 characters!
+													</div>
+													<div *ngIf="user.get('last_name').errors.pattern">
+														Please Enter a Valid last name!
+													</div>
+												</div>
+												<div *ngIf="error_messages.last_name" class="invalid-feedback">
+													{{ error_messages.last_name }}
+												</div>
+											</div>
+										</div>
+
+
+										<div class="row">
+											<div class="form-group col-12 mb-2">
+												<label for="emp_id">
+													EMP Id
+												</label>
+
+												<input formControlName="emp_id" type="text" id="emp_id"
+													class="form-control" maxlength="20" autocomplete="off" />
+												<div *ngIf="user.get('emp_id').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('emp_id').errors.minlength">
+														Emp Id must be atleast 3 characters!
+													</div>
+													<div *ngIf="user.get('emp_id').errors.pattern">
+														Please Enter a Valid Emp id!
+													</div>
+													<div *ngIf="user.get('emp_id').errors.maxlength">
+														Emp Id can have maximum 50 characters!
+													</div>
+												</div>
+												<div *ngIf="error_messages.empid" class="invalid-feedback">
+													{{ error_messages.empid }}
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="form-group col-12 mb-2">
+												<label for="email">
+													Email Id
+												</label>
+
+												<input formControlName="email_id" type="text" id="email_id"
+													class="form-control" maxlength="100" autocomplete="off" />
+												<div *ngIf="user.get('email_id').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('email_id').errors.maxlength">
+														Email Id can have maximum 100 characters!
+													</div>
+													<div *ngIf="user.get('email_id').errors.email">
+														Please Enter a Valid Email Id!
+													</div>
+												</div>
+												<div *ngIf="error_messages.email" class="invalid-feedback">
+													{{ error_messages.email }}
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="form-group col-12 mb-2">
+												<label for="mobile">
+													Mobile
+												</label>
+
+												<input formControlName="mobile" type="text" id="mobile"
+													class="form-control" maxlength="10" autocomplete="off" />
+												<div *ngIf="user.get('mobile').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('mobile').errors.required">
+														Mobile Number is required!
+													</div>
+													<div *ngIf="user.get('mobile').errors.pattern">
+														Mobile Number can have 10 digits only, starting with 6 | 7 | 8 | 9
+													</div>
+												</div>
+												<div *ngIf="error_messages.mobile" class="invalid-feedback">
+													{{ error_messages.mobile }}
+												</div>
+											</div>
+										</div>
+
+										<!-- <div class="row">
+											<div class="form-group col-12 mb-2">
+												<label for="role">
+													Role
+													<span style="color:red;">*</span>
+												</label>
+
+												<ng-multiselect-dropdown formControlName="role"
+													[placeholder]="'Select Role'" 	[settings]="dropdownSettings"
+													[data]="rolesData"
+													(click)="elementTouched(user.get('role'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="user.get('role').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('role').errors.required">
+														Role is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.role" class="invalid-feedback">
+													{{ error_messages.role }}
+												</div>
+											</div>
+										</div> -->
+
+										<div class="row">
+											<div class="form-group col-12 mb-2">
+												<label for="designation">
+													Designation
+													<span style="color:red;">*</span>
+												</label>
+
+												<ng-multiselect-dropdown formControlName="designation"
+													[placeholder]="'Select Designation'" 	[settings]="dropdownSettings"
+													[data]="designationData"
+													(click)="elementTouched(user.get('designation'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="user.get('designation').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('designation').errors.required">
+														Designation is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.designation" class="invalid-feedback">
+													{{ error_messages.designation }}
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="form-group col-12 mb-2">
+												<label for="username">
+													Login ID
+													<span style="color:red;">*</span>
+												</label>
+
+												<input formControlName="username" type="text" id="username"
+													class="form-control" maxlength="50" autocomplete="off" />
+												<div *ngIf="user.get('username').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('username').errors.required">
+														LoginID is required!
+													</div>
+													<div *ngIf="user.get('username').errors.pattern">
+														LoginID should be alphanumeric!
+													</div>
+													<div *ngIf="user.get('username').errors.minlength">
+														LoginID should be atleast 1 characters!
+													</div>
+													<div *ngIf="user.get('username').errors.maxlength">
+														LoginID can have maximum 50 characters!
+													</div>
+													<div *ngIf="user.get('username').errors.uniqueUserLogin">
+														LoginID already Exist!
+													</div>
+												</div>
+												<div *ngIf="error_messages.username" class="invalid-feedback">
+													{{ error_messages.username }}
+												</div>
+											</div>
+										</div>
+
+										<div class="row" *ngIf="urlKey === 'add'">
+											<div class="form-group col-12 mb-4">
+												<label for="password">
+													Password
+													<span style="color:red;">*</span>
+												</label>
+
+												<input formControlName="password" type="password" id="password"
+													class="form-control" autocomplete="off" maxlength="25"/>
+												<div *ngIf="user.get('password').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('password').errors.required">
+														Password is required!
+													</div>
+													<div *ngIf="user.get('password').errors.minlength">
+														Password should be atleast 4 characters
+													</div>
+													<div *ngIf="user.get('password').errors.maxlength">
+														Password can have maximum 25 characters
+													</div>
+												</div>
+												<div *ngIf="error_messages.password" class="invalid-feedback">
+													{{ error_messages.password }}
+												</div>
+											</div>
+										</div>
+
+										<div class="row" *ngIf="urlKey === 'edit'">
+											<div class="form-group col-12 mb-4">
+												<label for="password">
+													New Password (In case of Reset)
+												</label>
+
+												<input formControlName="new_password" type="password" id="password"
+													class="form-control" autocomplete="off" maxlength="25"/>
+												<div *ngIf="user.get('new_password').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="user.get('new_password').errors.minlength">
+														Password should be atleast 4 characters
+													</div>
+													<div *ngIf="user.get('new_password').errors.maxlength">
+														Password can have maximum 25 characters
+													</div>
+												</div>
+												<div *ngIf="error_messages.new_password" class="invalid-feedback">
+													{{ error_messages.new_password }}
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="form-group col-12 mb-2">
+												<a [routerLink]="['/manpower/users']"
+												[queryParams]="{campaign_id: campaign_id}"
+													class="btn btn-raised btn-orange mr-1">
+													<i class="ft-x"></i>
+													Cancel
+												</a>
+												<button type="submit" class="btn btn-raised btn-purple">
+													<i class="fa fa-check-square-o"></i>
+													Save
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</ng-container>
+			<ng-template #norecord>
+				<div class="card col-12">
+					<div class="card-body mt-3">
+						<p>Loading Data...</p>
+					</div>
+				</div>
+			</ng-template>
+		</div>
+	</section>
+
+</div>

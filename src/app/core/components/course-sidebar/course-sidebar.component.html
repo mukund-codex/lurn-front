@@ -1,0 +1,111 @@
+<!-- Sidebar Header starts -->
+<div class="sidebar-header">
+	<div class="logo clearfix">
+		<a [routerLink]="['/company']" class="logo-text float-left">
+			<div class="logo-img">
+				<img src="assets/img/portrait/avatars/avatar-08.png" width="150px">
+			</div>
+			<!-- <span class="text align-middle">Lurn</span> -->
+		</a>
+		<a class="nav-toggle d-none d-sm-none d-md-none d-lg-block" id="sidebarToggle" href="javascript:;">
+			<!-- <i class="ft-toggle-right toggle-icon" data-toggle="expanded"></i> -->
+		</a>
+		<a class="nav-close d-block d-md-block d-lg-none d-xl-none" id="sidebarClose" href="javascript:;">
+			<i class="ft-x"></i>
+		</a>
+	</div>
+</div>
+<!-- Sidebar Header Ends -->
+
+<!-- Sidebar Content starts -->
+<div class="sidebar-content">
+	<div class="nav-container">
+		<ul class="navigation">
+			<!-- First level menu -->
+			<li *ngFor="let menuItem of menuItems" 
+			[ngClass]="(currentPath == menuItem.path) ? 'active' : [menuItem.class]"
+				[class]="(currentPath == menuItem.path) ? 'active' : ''"
+				[routerLinkActive]="menuItem.submenu.length != 0 ? '' : 'active'" >
+				<ng-container *ngIf="menuItem.show">
+					<a (click)="gotoRoute(menuItem.class, menuItem.path)"
+						*ngIf="!menuItem.isExternalLink; else externalLinkBlock">
+						<i [ngClass]="[menuItem.icon]"></i>
+						<span class="menu-title">{{ menuItem.title }}
+							<!-- This is called -->
+						</span>
+						<span *ngIf="menuItem.badge != ''" [ngClass]="[menuItem.badgeClass]">{{ menuItem.badge }}</span>
+					</a>
+					<ng-template #externalLinkBlock>
+						<a [href]="[menuItem.path]" target="_blank">
+							<i [ngClass]="[menuItem.icon]"></i>
+							<span class="menu-title">{{ menuItem.title }}</span>
+							<span *ngIf="menuItem.badge != ''"
+								[ngClass]="[menuItem.badgeClass]">{{ menuItem.badge }}</span>
+						</a>
+					</ng-template>
+
+					<!-- Second level menu -->
+					<ul class="menu-content" *ngIf="menuItem.submenu.length > 0">
+						<li *ngFor="let menuSubItem of menuItem.submenu"
+							[routerLinkActive]="menuSubItem.submenu.length > 0 ? '' : 'active'"
+							[ngClass]="(currentPath == menuSubItem.path) ? 'active' : [menuSubItem.class]">
+							<ng-container *ngIf="menuSubItem.show">
+								
+								<a (click)="menuSubItem.submenu.length > 0 ? null : gotoRoute('', menuSubItem.path)"
+									*ngIf="!menuSubItem.isExternalLink; else externalSubLinkBlock"
+									>
+									<i [ngClass]="[menuSubItem.icon]"></i>
+									<span class="menu-title">{{ menuSubItem.title }}</span>
+									<span *ngIf="menuSubItem.badge != ''" [ngClass]="[menuSubItem.badgeClass]">
+										{{ menuSubItem.badge }}
+									</span>
+								</a>
+								<ng-template #externalSubLinkBlock>
+									<a [href]="[menuSubItem.path]">
+										<i [ngClass]="[menuSubItem.icon]"></i>
+										<span class="menu-title">{{ menuSubItem.title }}</span>
+										<span *ngIf="menuSubItem.badge != ''" [ngClass]="[menuSubItem.badgeClass]">
+											{{ menuSubItem.badge }}
+										</span>
+									</a>
+								</ng-template>
+								<!-- Third level menu -->
+								<ul class="menu-content" *ngIf="menuSubItem.submenu.length > 0">
+									<li *ngFor="let menuSubsubItem of menuSubItem.submenu" routerLinkActive="active"
+										[ngClass]="[menuSubsubItem.class]">
+										<a (click)="gotoRoute(menuItem.class, menuItem.path)" 
+											*ngIf="!menuSubsubItem.isExternalLink; else externalSubSubLinkBlock">
+											<i [ngClass]="[menuSubsubItem.icon]"></i>
+											<span class="menu-title">{{ menuSubsubItem.title }}</span>
+											<span *ngIf="menuSubsubItem.badge != ''"
+												[ngClass]="[menuSubsubItem.badgeClass]">
+												{{ menuSubsubItem.badge }}
+											</span>
+										</a>
+										<ng-template #externalSubSubLinkBlock>
+											<a [href]="[menuSubsubItem.path]">
+												<i [ngClass]="[menuSubsubItem.icon]"></i>
+												<span class="menu-title">{{ menuSubsubItem.title }}</span>
+												<span *ngIf="menuSubsubItem.badge != ''"
+													[ngClass]="[menuSubsubItem.badgeClass]">
+													{{ menuSubsubItem.badge }}
+												</span>
+											</a>
+										</ng-template>
+									</li>
+								</ul>
+							</ng-container>
+						</li>
+					</ul>
+				</ng-container>
+			</li>
+		</ul>
+	</div>
+	<!-- <div class="sidebar-footer" style="color: #fff;position:absolute;bottom:0;font-size:11px;padding-left:15px;padding-bottom:15px;">
+		Copyright  &copy; {{currentDate | date: 'yyyy'}} <a id="pixinventLink" href="https://www.techizerindia.com/" style="color: #fff;">TechizerIndia. <br/>
+			All rights reserved.</a>
+	</div> -->
+</div>
+
+
+<!-- Sidebar Content Ends -->

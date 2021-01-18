@@ -1,0 +1,88 @@
+<section id="simple-table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-shadow-0">
+        <div class="card-header m-top-bottom-10">
+          <h4 class="card-title module-title">Master Files</h4>
+          <app-actionbtns [addRedirect]="'/master/add'" [showImport]="false" [showExport]="false">
+          </app-actionbtns>
+        </div>
+
+        <div class="card-body">
+
+        <form name="searchForm" #searchForm="ngForm" class="">
+          <div class="card-body" class="row">
+            <ng-container *ngIf="records as result; else loading">
+              <div *ngIf="!result.data.length">
+                <div [attr.colSpan]="6"></div>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-container" [routerLink]="'/master/add'"
+                [queryParams]="{campaign_id: campaign_id, module_id: module_id}">
+                <div class="card col-cell border-orange">
+                  <div class="card-header text-center p-4">
+                    <img src="assets/img/logos/add-button-tp-bg.png" alt="">
+                    <h5 style="color: #F7941E;">Add Master File</h5>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-4 col-sm-6 col-container" *ngFor="let row of result.data; let i=index">
+                <div class="card col-cell">
+
+                  <div class="row p-1">
+                    <div class="col-6 text-left">
+                      <div class="a float-left" *ngIf="row.type == 'gif'">
+                        <img src="assets/img/logos/gif-icon.png">
+                      </div>
+                      <div class="a float-left" *ngIf="row.type == 'video'">
+                        <img src="assets/img/logos/video-icon.png">
+                      </div>
+                      <div class="a float-left" *ngIf="row.type == 'image'">
+                        <img src="assets/img/logos/poster-icon.png">
+                      </div>
+                    </div>
+                    <div class="col-6 text-right"> <a class="ng2-smart-action ng2-smart-action-edit-edit"
+                        [routerLink]="['/master/edit/' + row.id]"
+                        [queryParams]="{ campaign_id: campaign_id, module_id: module_id}">
+                        <i class="ft-edit-2 info font-medium-1 mr-2"></i>
+                      </a>
+                      <a *ngIf="showDelete" class="ng2-smart-action ng2-smart-action-delete-delete" (click)="delete(row.id)">
+                        <i class="ft-x danger font-medium-1 mr-2"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="card-header p-1 flex-column text-center" style="flex: auto">
+                    <img src="{{ row.thumbnail }}" style="height:100px;">
+                    <hr />
+                    <h4 class="a">{{ row.name }}</h4>
+                  </div>
+                  <div class="card-block container">
+
+                    <div class="container">
+                      <div class="row" *ngIf="row.settings.is_template_available === 'true'">
+                        <div class="col-lg-6 col-sm-6 col-6 text-center p-1"
+                          style="border-right: 1px solid #f3f1f1;border-bottom: 1px solid #f3f1f1;">
+                          <span class="file-counter-container">{{ row.template_count }}</span><br/>
+                          Templates
+                        </div>
+
+                        <div class="col-lg-6 col-sm-6 col-6 text-center p-1" style="border-bottom: 1px solid #f3f1f1;">
+                          <span (click)="addTemplate(row.id)"><img
+                              src="assets/img/logos/add-button-tp-bg.png"></span><br />
+                          Template
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #loading>Loading Master File Data</ng-template>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

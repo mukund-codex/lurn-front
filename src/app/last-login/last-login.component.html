@@ -1,0 +1,93 @@
+<div style="min-height: calc(100vh - 75px);">
+    <app-topbar *ngIf="isAccessible" (changeCampaign)="changeCampaign($event)"></app-topbar>
+    <section id="simple-table">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-border-shadow-0">
+                    <div class="card-header m-top-bottom-10 px-3">
+                        <h4 class="card-title module-title">{{ title }}</h4>
+                        <app-actionbtns [showAdd]="false" [showImport]="false" [showExport]="showExport" (download)="export()">
+                        </app-actionbtns>
+                    </div>
+                    <div class="card-body">
+                        <div class="px-3">
+                            <form name="searchForm" #searchForm="ngForm" ngForm class="table-responsive">
+                            <div class="card-block" *ngIf="records">
+                                
+                                    <table class="table table-bordered table-condensed">
+                                       
+                                    
+                                        <thead>
+                                            <tr>
+                                                <th>Sr. No</th>
+                                                <th>City Name</th>
+                                                <th>MR Name</th>
+                                                <th>Area Name</th>
+                                                <th>ASM Name</th>
+                                                <th>Region Name</th>
+                                                <th>RSM Name</th>
+                                                <th>Zone Name</th>
+                                                <th>ZSM Name</th>
+                                                <th>National Zone Name</th>
+                                                <th>NSM Name</th>
+                                                <th>Last Login</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                             <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <input type="text" name="users_name" ngModel class="form-control"
+                                                        placeholder="User Name" autocomplete="off" />
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <ng-container>
+                                                <tr *ngIf="!records.data.length">
+                                                    <td [attr.colSpan]="3">No Records Found!</td>
+                                                </tr>
+                                                <tr *ngFor="let row of records.data; let i=index">
+                                                    <th scope="row">
+                                                        {{ ((records.meta.pagination.current_page - 1) * records.meta.pagination.per_page) + i + 1 }}
+                                                    </th>
+                                                    <td>{{ row.city }}</td>
+                                                    <td>{{ row.city_manager }}</td>
+                                                    <td>{{ row.area }}</td>
+                                                    <td>{{ row.area_manager }}</td>
+                                                    <td>{{ row.region }}</td>
+                                                    <td>{{ row.region_manager }}</td>
+                                                    <td>{{ row.zone }}</td>
+                                                    <td>{{ row.zone_manager }}</td>
+                                                    <td>{{ row.national_zone }}</td>
+                                                    <td>{{ row.national_zone_manager }}</td>
+                                                    <td>{{ row.last_login | date:'medium'}}</td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                     </table>
+                                
+                                <div *ngIf="records">
+                                    <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                                        [collectionSize]="records.meta.pagination.total"
+                                        [pageSize]="records.meta.pagination.per_page"
+                                        [(page)]="records.meta.pagination.current_page"></ngb-pagination>
+                                </div>
+                            </div>
+                        </form>
+                            <ng-template #loading>Loading Data...</ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

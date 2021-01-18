@@ -1,0 +1,99 @@
+<section id="simple-table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-shadow-0">
+        <div class="card-header">
+          <h4 class="card-title pb-2">Custom Requests</h4>
+          <h5 *ngIf="(customRequestData | async) as requests">Total Records: {{ requests.meta.pagination.total }}</h5>
+          <app-actionbtns *ngIf="customRequestData; else loading" [showExport]="false"
+            [showAdd]="false" [showImport]="false">
+          </app-actionbtns>
+        </div>
+
+        <div class="card-body">
+          <p *ngIf="message">{{ message.text }}</p>
+          <div class="card-block">
+            <div class="table-responsive">
+              <table class="table table-bordered table-condensed">
+                <thead>
+                  <tr>
+                    <th>Sr. No</th>
+                    <th>Camp Name</th>
+                    <th>Module Name</th>
+                    <th>Master File Name</th>
+                    <th>Doctor Name</th>
+                    <th>User First Name</th>
+                    <th>User Last Name</th>
+                    <th>Template Name</th>
+                    <th>Language Name</th>
+                    <th>Preview File</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td><input type="text" (keyup)="search()" class="form-control" placeholder="Camp Name"
+                        [(ngModel)]="camp_name"></td>
+                    <td><input type="text" (keyup)="search()" class="form-control" placeholder="Module Name"
+                        [(ngModel)]="module_name"></td>
+                    <td><input type="text" (keyup)="search()" class="form-control" placeholder="Master File Name"
+                        [(ngModel)]="masterfile_name"></td>
+                    <td></td>
+                    <td><input type="text" (keyup)="search()" class="form-control" placeholder="First Name"
+                        [(ngModel)]="first_name"></td>
+                    <td><input type="text" (keyup)="search()" class="form-control" placeholder="Last Name"
+                        [(ngModel)]="last_name"></td>
+                    <td><input type="text" (keyup)="search()" class="form-control" placeholder="Template Name"
+                        [(ngModel)]="template_name"></td>
+                    <td><input type="text" (keyup)="search()" class="form-control" placeholder="Language Name"
+                        [(ngModel)]="language_name"></td>
+                    <td></td>
+                  </tr>
+
+                  <ng-container *ngIf="(customRequestData | async) as requests; else loading">
+                    <tr *ngIf="!requests.data.length">
+                      <td [attr.colSpan]="10">No Records Found!</td>
+                    </tr>
+                    <tr *ngFor="let row of requests.data; let i=index">
+                      <th scope="row">
+                        {{ ((requests.meta.pagination.current_page - 1) * requests.meta.pagination.per_page)
+                        + i +
+                        1 }}
+                      </th>
+                      <td>{{ row.camp.name }}</td>
+                      <td>{{ row.module.name }}</td>
+                      <td>{{ row.masterfile?.name }}</td>
+                      <td>{{ row.doctor?.info?.doctor_name }}</td>
+                      <td>{{ row.user.first_name }}</td>
+                      <td>{{ row.user.last_name }}</td>
+
+                      <td>{{ row.template.name }}</td>
+                      <td>{{ row.language.name }}</td>
+                      <td *ngIf="row.image.length">
+                        <a *ngIf="row.image[0].response" target="_blank"
+                          href="{{ row.image[0].response.result }}">Preview</a>
+                        <a *ngIf="!row.image[0].response">Pending</a>
+                      </td>
+                      <td *ngIf="row.video.length">
+                        {{ row.template.name }}
+                      </td>
+                      <td *ngIf="row.gif.length">
+                        <a target="_blank" href="{{ row.gif[0].response.result }}">Preview</a>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+            <div *ngIf="(customRequestData | async) as requests">
+              <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                [collectionSize]="requests.meta.pagination.total" [pageSize]="requests.meta.pagination.per_page"
+                [(page)]="requests.meta.pagination.current_page"></ngb-pagination>
+            </div>
+          </div>
+          <ng-template #loading>Loading Custom Request Data</ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

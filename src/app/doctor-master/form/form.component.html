@@ -1,0 +1,84 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<section id="basic-form-layouts">
+  <div class="row match-height">
+    <div class="col-md-12">
+      <ng-container *ngIf="buildForm; else norecord">
+        <div class="card">
+          <div class="card-body">
+            <div class="px-3">
+              <form class="form form-horizontal striped-rows form-bordered" [formGroup]="doctorForm"
+                (ngSubmit)="onSubmit($event)">
+
+                <div class="form-body">
+                  <h4 class="form-section">
+                    <i class="ft-user"></i>
+                    {{ title }}
+                  </h4>
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="company_id">Company Name</label>
+                    <div class="col-md-9">
+
+                      <ng-container *ngIf="(companies | async) as companies">
+                        <ng-multiselect-dropdown formControlName="company_id" (onSelect)="getCamps($event)"
+                          [placeholder]="
+													'Select Company'
+												" [data]="companies.data" [settings]="dropdownSettings"></ng-multiselect-dropdown>
+                      </ng-container>
+
+                      <div *ngIf="submitted && formObj.company_id.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.company_id.errors.required">Company Name is required!</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="camp_id">Camp Name</label>
+                    <div class="col-md-9">
+                      <ng-container *ngIf="(campsData | async) as resultData">
+                        <ng-multiselect-dropdown formControlName="camp_id" [placeholder]="
+                                                                                    'Select Camp' "
+                          [data]="resultData.data" [settings]="dropdownSettings">
+                        </ng-multiselect-dropdown>
+                      </ng-container>
+
+                      <div *ngIf="submitted && formObj.camp_id.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.camp_id.errors.required">Camp Name is required!</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control">
+                      Is Active ?
+                    </label>
+                    <div class="col-md-9">
+                      <div class="input-group">
+                        <ui-switch defaultBgColor='#ff4d4d' labelOn="Yes" labelOff="No" formControlName="is_active">
+                        </ui-switch>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div style="text-align:center">
+                  <h2>Build Form</h2>
+                </div>
+                <div>
+                  <div id="stage1" class="build-wrap" style="padding: 100px;"></div>
+                </div>
+
+
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #norecord>
+        <p>Data Loading...</p>
+      </ng-template>
+    </div>
+  </div>
+</section>

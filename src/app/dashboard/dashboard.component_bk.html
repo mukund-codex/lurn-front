@@ -1,0 +1,195 @@
+<section id="simple-table">
+  <div class="row">
+
+    <div class="col-sm-12 mt-5">
+      <form action="onSubmit()" class="form w-100" [formGroup]="dashboardForm">
+        <div class="form-row">
+
+          <div class="col-xl-4 col-lg-4 form-group">
+            <ng-multiselect-dropdown formControlName="company" [placeholder]="'Select Company'" [data]="companyData.data"
+              [settings]="dropdownSettings" (onSelect)="getCampaign($event)">
+            </ng-multiselect-dropdown>
+            <div *ngIf="dash.company.errors && dash.company.touched" class="invalid-feedback">
+              <div *ngIf="dash.company.errors.required">Company Name is required!</div>
+            </div>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 form-group">
+            <ng-multiselect-dropdown formControlName="campaign" [placeholder]="'Select Campaign'"
+              [data]="campaignData.data" [settings]="dropdownSettingsCampaign" (onSelect)="getCamps($event)">
+            </ng-multiselect-dropdown>
+            <div *ngIf="dash.campaign.errors && dash.campaign.touched" class="invalid-feedback">
+              <div *ngIf="dash.campaign.errors.required">
+                Campaign Name is required!
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 form-group">
+            <ng-multiselect-dropdown formControlName="camp" [placeholder]="'Select Camp'" [data]="campData.data"
+              [settings]="dropdownSettings">
+            </ng-multiselect-dropdown>
+            <div *ngIf="dash.camp.errors && dash.camp.touched" class="invalid-feedback">
+              <div *ngIf="dash.camp.errors.required">
+                Camp Name is required!
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-5 col-lg-5 form-group">
+            <div class="row">
+              <label class="col-md-3 label-control text-right" for="start_date">Start Date</label>
+              <div class="col-md-9 input-group">
+                <input class="form-control" placeholder="dd-mm-yyyy" formControlName="start_date"
+                  (dateSelect)="startdate($event)" ngbDatepicker #start_date="ngbDatepicker"
+                  [ngClass]="{ 'is-invalid': submitted && formObj.start_date.errors }">
+                <div class="input-group-addon" (click)="start_date.toggle()">
+                  <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                </div>
+                <div *ngIf="submitted && formObj.start_date.errors" class="invalid-feedback">
+                  <div *ngIf="formObj.start_date.errors.required">Start Date is required!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-5 col-lg-5 form-group">
+            <div class="row">
+              <label class="col-md-3 label-control text-right" for="end_date">End Date</label>
+              <div class="col-md-9 input-group">
+                <input class="form-control" [minDate]="minDate" placeholder="dd-mm-yyyy" formControlName="end_date"
+                  ngbDatepicker #end_date="ngbDatepicker"
+                  [ngClass]="{ 'is-invalid': submitted && formObj.end_date.errors }">
+                <div class="input-group-addon" (click)="end_date.toggle()">
+                  <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                </div>
+                <div *ngIf="submitted && formObj.end_date.errors" class="invalid-feedback">
+                  <div *ngIf="formObj.end_date.errors.required">End Date is required!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-2 col-lg-2 form-group">
+            <button type="submit" class="btn btn-primary w-100 text-white">Search</button>
+          </div>
+        </div>
+      </form>
+
+
+      <!-- <div class="row">
+        <div class="col-xl-6 col-lg-6">
+          <canvas id="myChart1"></canvas>
+        </div>
+        <div class="col-xl-6 col-lg-6">
+          <canvas id="myChart"></canvas>
+        </div>
+      </div> -->
+
+    </div>
+
+    <div class="col-sm-12">
+      <h2>Analytics Overview</h2>
+      <div class="row">
+        <ng-container>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6 d-flex align-content-stretch flex-wrap">
+            <div class="card flex-row text-center p-2 dash-card">
+              <div class="card-header-icon">
+                <span class="helper"></span>
+                <img class="p-0 card-color-icon" src="assets/img/pages/dashboard/Company-Count.png" width="50%">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">50</h5>
+                <p class="card-text">Company Count</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6 d-flex align-content-stretch flex-wrap">
+            <div class="card flex-row text-center p-2 dash-card">
+              <div class="card-header-icon">
+                <span class="helper"></span>
+                <img class="p-0 card-color-icon" src="assets/img/pages/dashboard/Campaign-Count.png" width="50%">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">50</h5>
+                <p class="card-text">Campaign Count</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6 d-flex align-content-stretch flex-wrap">
+            <div class="card flex-row text-center p-2 dash-card">
+              <div class="card-header-icon">
+                <span class="helper"></span>
+                <img class="p-0 card-color-icon" src="assets/img/pages/dashboard/Camp-Count.png" width="50%">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">50</h5>
+                <p class="card-text">Camp Count</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6 d-flex align-content-stretch flex-wrap">
+            <div class="card flex-row text-center p-2 dash-card">
+              <div class="card-header-icon">
+                <span class="helper"></span>
+                <img class="p-0 card-color-icon" src="assets/img/pages/dashboard/Total-Doctors.png" width="50%">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">50</h5>
+                <p class="card-text">Total Doctors</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6 d-flex align-content-stretch flex-wrap">
+            <div class="card flex-row text-center p-2 dash-card">
+              <div class="card-header-icon">
+                <span class="helper"></span>
+                <img class="p-0 card-color-icon" src="assets/img/pages/dashboard/Total-Requests.png" width="50%">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">50</h5>
+                <p class="card-text">Total Requests</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6 d-flex align-content-stretch flex-wrap">
+            <div class="card flex-row text-center p-2 dash-card">
+              <div class="card-header-icon">
+                <span class="helper"></span>
+                <img class="p-0 card-color-icon" src="assets/img/pages/dashboard/Active-Camps.png" width="50%">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">50</h5>
+                <p class="card-text">Active Camps</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6 d-flex align-content-stretch flex-wrap">
+            <div class="card flex-row text-center p-2 dash-card">
+              <div class="card-header-icon">
+                <span class="helper"></span>
+                <img class="p-0 card-color-icon" src="assets/img/pages/dashboard/Master-Files.png" width="50%">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">50</h5>
+                <p class="card-text">Master Files</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6 d-flex align-content-stretch flex-wrap">
+            <div class="card flex-row text-center p-2 dash-card">
+              <div class="card-header-icon">
+                <span class="helper"></span>
+                <img class="p-0 card-color-icon" src="assets/img/pages/dashboard/Total-Templates.png" width="50%">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">50</h5>
+                <p class="card-text">Total Templates</p>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</section>

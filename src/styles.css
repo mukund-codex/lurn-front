@@ -1,0 +1,276 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import 'assets/css/toastr.css';
+
+body{
+	background-color: #FFF !important;
+	background-image: url(assets/img/bg.png);
+	background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+
+
+.color-picker {
+	top: 75% !important;
+	left: 19px !important;
+}
+.form .form-body {
+	overflow: unset;
+}
+.section-header {
+	color: #343a40;
+	line-height: 3rem;
+	font-size: 1.2rem;
+	letter-spacing: 0.5px;
+	font-weight: 400;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #343a40;
+}
+
+.switch .on,
+.switch .off {
+	top: 18% !important;
+	padding-left: 5px;
+	padding-right: 5px;
+	color: #fff !important;
+}
+
+.switch-medium.switch-labeled {
+	width: 100px !important;
+}
+
+.switch-medium.switch-labeled.checked small {
+	left: 70px !important;
+}
+
+.invalid-feedback {
+	display: block !important;
+}
+
+.save-template {
+	color: #fff !important;
+}
+
+.clear-all {
+	color: #fff !important;
+}
+.form-actions .get-data {
+	display: none;
+}
+.form-elements .access-wrap {
+	display: none;
+}
+
+.card-border-shadow-0{
+	border: none !important;
+	/* box-shadow: none !important; */
+}
+
+.col-orange{
+    color: #F7941E;
+}
+
+.card .card-header {
+	padding: 0;
+	border-bottom: 1px solid #cecece;
+}
+
+.card-title{
+	font-size: 1.5rem !important;
+}
+.tot-record{
+	color: #54339E;
+	    background: #e1e1e1;
+    padding: 3px 9px;
+    border-radius: 4px;
+}
+.card .card-block{
+	padding: 0px !important; 
+}
+
+form.striped-rows .form-group > div {
+	padding: 1rem !important;
+}
+
+.app-sidebar .logo-img, .off-canvas-sidebar .logo-img {
+	width: 50px !important;
+}
+
+.input-group {
+    margin-bottom: 0 !important;
+}
+
+.btn[class*="btn-"] {
+	margin-bottom: 0 !important;
+}
+
+.navbar .navbar-nav {
+	margin-right: 0px;
+}
+
+.app-sidebar .navigation li a{
+	color: #FFF !important;
+}
+
+.app-sidebar .navigation li:hover{
+	color: #c5a4ff !important;
+}
+
+.app-sidebar .navigation li a:hover i{
+	color: #c5a4ff !important;
+}
+
+.navigation i{
+	color: #FFF !important;
+}
+
+.sidebar-background{
+	background: url('assets/img/sidebar-bg/cube-black.png');
+}
+
+.logo .logo-text{
+	color: #fff !important;
+}
+
+.sidebar-header a.nav-toggle{
+	color: #FFF !important;
+}
+
+@media(min-width: 993px){
+	.main-panel .main-content{
+		/* background: linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.5)),url('assets/img/main-content-bg/cubit-pencil.png'); */
+		background-position: bottom right;
+		background-repeat: no-repeat;
+	}
+}
+
+.dropdown-item:active{
+	background-color: lightgrey !important;
+}
+
+.form-wrap .form-builder .empty .frmb {
+	margin-right: 1px !important;
+}
+
+.module-title{
+	position: absolute;
+    margin-top: 10px;
+}
+
+.m-top-bottom-10{
+	margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.dropdown-list
+{
+	max-height: 300px !important;
+    overflow: hidden !important;
+}
+
+.navbar-expand-lg
+{
+	background-color: rgba(255, 255, 255, 0.80);
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6
+{
+	font-weight: 600;
+}
+
+.pad-0
+{
+	padding:0;
+}
+
+#simple-table , #basic-form-layouts
+{
+	margin-top:30px; 
+}
+
+.ft-x{
+    transition: background-color 0.5s !important
+}
+
+.ft-x:hover
+{
+    font-weight: bold;
+    transform: rotate(180deg) !important;
+    background-color: red;
+    color: #fff !important;
+}
+
+.ft-edit-2
+{
+    transition: background-color 0.5s !important
+}
+
+.ft-edit-2:hover
+{
+	font-weight: bold;
+	
+    transform: rotate(180deg) !important;
+    background-color:#1CBCD8;
+    color: #fff !important;
+}
+.input-group-addon {
+	padding: 0.375rem 0.75rem;
+	margin-bottom: 0;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #495057;
+	text-align: center;
+	background-color: #e9ecef;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+}
+
+.card
+{
+	background-color: rgba(255, 255, 255, 0.76);
+}
+
+
+.table
+{
+	border-radius: 10px;
+}
+
+.table thead 
+{
+	background-image: linear-gradient(-60deg, #ffbf7e 0%, #ffcc84 100%);
+	color:#fff;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #f9ba62;
+    border-color: #d0cbc7;
+}
+
+.table-bordered tbody tr:nth-of-type(odd)
+{
+	background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+}
+
+table.table-bordered{
+    border:1px solid #f7ede2;
+    margin-top:20px;
+  }
+table.table-bordered > thead > tr > th{
+    border:1px solid #f7ede2;
+}
+table.table-bordered > tbody > tr > td{
+    border:1px solid #f7ede2;
+}
+
+table
+{
+	border:solid 2px #ece5cf !important;
+}

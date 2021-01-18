@@ -1,0 +1,581 @@
+<section id="basic-form-layouts">
+  <div class="row match-height">
+    <div class="col-md-12 p-0">
+      <div class="card">
+        <div class="card-body">
+          <div class="px-3">
+
+            <ng-container *ngIf="buildForm; else norecord">
+              <form class="form form-horizontal" [formGroup]="templateForm" (ngSubmit)="onSubmit()">
+
+                <div class="form-body">
+                  <h4 class="form-section">
+                    <i class="ft-user"></i>
+                    {{ title }}
+                  </h4>
+                  <div class="row">
+                    <div class="form-group col-md-6">
+                      <div class="row">
+                        <label class="col-md-3 pt-1" for="name">
+                          Name
+                          <span style="color:red;">*</span>
+                        </label>
+                        <div class="col-md-9">
+                          <input type="text" id="name" formControlName="name" class="form-control" autocomplete="off"
+                            [ngClass]="{ 	'is-invalid': submitted && formObj.name.errors }" maxlength="50"/>
+                          <div *ngIf=" submitted && formObj.name.errors " class="invalid-feedback">
+                            <div *ngIf=" formObj.name.errors.required ">
+                              Name is required!
+                            </div>
+                            <div *ngIf=" formObj.name.errors.pattern ">
+                              Name format is invalid!
+                            </div>
+                            <div *ngIf=" formObj.name.errors.minlength ">
+                              Name should contain minimum 3 characters!
+                            </div>
+                            <div *ngIf=" formObj.name.errors.maxlength ">
+                              Name can contain upto 50 characters only!
+                            </div>
+                          </div>
+
+                          <div *ngIf="error_messages.name" class="invalid-feedback">
+                            {{ error_messages.name }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <div class="row">
+                        <label class="col-md-3 pt-1" for="language_id">
+                          Language
+                          <span style="color:red;">*</span>
+                        </label>
+                        <div class="col-md-9">
+                          <ng-container *ngIf="languages">
+                            <ng-multiselect-dropdown formControlName="language_id" [placeholder]="'Select Language'"
+                              [settings]="dropdownSettings" [data]="languages">
+                            </ng-multiselect-dropdown>
+                          </ng-container>
+                          <div *ngIf="submitted && formObj.language_id.errors" class="invalid-feedback">
+                            <div *ngIf="formObj.language_id.errors.required">Please Select Language!</div>
+                          </div>
+                          <div *ngIf="error_messages.language_id" class="invalid-feedback">
+                            {{ error_messages.language_id }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-group col-md-6">
+                      <div class="row">
+                        <label class="col-md-3 pt-1" for="dimension_id">
+                          Dimension
+                          <span style="color:red;">*</span>
+                        </label>
+                        <div class="col-md-9">
+
+                          <ng-container *ngIf="(dimensions) as dimensions">
+                            <ng-multiselect-dropdown formControlName="dimension_id" [placeholder]="'Select Dimension'"
+                              [settings]="dropdownSettings" [data]="dimensions.data">
+                            </ng-multiselect-dropdown>
+                          </ng-container>
+
+                          <div *ngIf="submitted && formObj.dimension_id.errors" class="invalid-feedback">
+                            <div *ngIf="formObj.dimension_id.errors.required">Please Select Dimension!</div>
+                          </div>
+                          <div *ngIf="error_messages.dimension" class="invalid-feedback">
+                            {{ error_messages.dimension }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <div class="row">
+                        <label class="col-md-3 pt-1" for="file">
+                          Template File
+                          <span style="color:red;">*</span>
+                        </label>
+                        <div class="col-md-9">
+                          <input type="file" formControlName="file" class="form-control" id="file"
+                            (change)="fileChange($event.target.files)" accept="image/x-png,image/gif,image/jpeg,image/jpg">
+
+                          <div *ngIf="submitted && formObj.file.errors" class="invalid-feedback"
+                            style="display: block !important">
+                            <div *ngIf="formObj.file.errors.required">Please Select File!</div>
+                          </div>
+                          <div *ngIf="error_messages.file" class="invalid-feedback">
+                            {{ error_messages.file }}
+                          </div>
+                          <ng-container *ngIf="template_id">
+                            <span>Previously Selected File: </span>
+                            <a target="_blank" href="{{ currentFile }}">Preview</a>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="module_type == 'video'">
+                    <div class="row">
+                      <div class="form-group col-md-6">
+                        <div class="row">
+                          <label class="col-md-3 pt-1" for="position">
+                            Position
+                            <span style="color:red;">*</span>
+                          </label>
+                          <div class="col-md-9">
+                            <select class="form-control" formControlName="position">
+                              <option value="front">Front</option>
+                              <option value="back">Back</option>
+                            </select>
+                            <div *ngIf="submitted && formObj.position.errors" class="invalid-feedback">
+                              <div *ngIf="formObj.position.errors.required">Please Select Position!</div>
+                            </div>
+                            <div *ngIf="error_messages.position" class="invalid-feedback">
+                              {{ error_messages.position }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <div class="row">
+                          <label class="col-md-3 pt-1" for="file">
+                            Duration
+                            <span style="color:red;">*</span>
+                          </label>
+                          <div class="col-md-9">
+                            <input class="form-control" id="duration" formControlName="duration" maxlength="3">
+                            <div *ngIf="submitted && formObj.duration.errors" class="invalid-feedback">
+                              <div *ngIf="formObj.duration.errors.required">Please Select Duration!</div>
+                            </div>
+                            <div *ngIf=" formObj.duration.errors.minlength ">
+                              Duration should contain minimum 1 digit!
+                            </div>
+                            <div *ngIf=" formObj.duration.errors.maxlength ">
+                              Duration can contain upto 3 digit only!
+                            </div>
+                            <div *ngIf="error_messages.duration" class="invalid-feedback">
+                              {{ error_messages.duration }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-group col-md-6">
+                      <div class="row">
+                        <label class="col-md-6 pt-1">Is Customization Available ?</label>
+                        <div class="col-md-6">
+                          <div class="input-group">
+                            <ui-switch class="ml-auto" defaultBgColor='#ff4d4d' labelOn="Yes" labelOff="No"
+                              formControlName="is_customizable" (change)="onAddInput($event)">
+                            </ui-switch>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <div class="row">
+                        <label class="col-md-6 pt-1">Is Active ?</label>
+                        <div class="col-md-6">
+                          <div class="input-group">
+                            <ui-switch defaultBgColor='#ff4d4d' class="ml-auto" labelOn="Yes" labelOff="No" formControlName="is_active">
+                            </ui-switch>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="templateForm.controls.is_customizable.value">
+                    <div formArrayName="inputs"
+                      *ngFor="let item of templateForm.get('inputs')['controls']; let index = index;">
+                      <div [formGroupName]="index" class="form-group row mb-0">
+                        <label class="col-md-2 pt-1" for="video">Inputs</label>
+                        <div class="form-group col-md-10">
+                          <table class="table table-bordered table-condensed mb-0">
+                            <div class="col-md-12">
+
+                              <div class="row pb-2">
+
+                                <div class="col-md-4 no-gutters">
+                                  <label class="col-md-12 pt-2" for="name">
+                                    Name
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <input class="form-control" type="text" autocomplete="off" id="name"
+                                      formControlName="name" maxlength="50">
+                                    <input type="hidden" [formControl]="item.get('id')">
+                                    <div *ngIf="submitted && item.get('name').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('name').errors.required">Please Enter Name!</div>
+
+                                      <div *ngIf="item.get('name').errors.minlength">
+                                        Name should contain atleast 3 characters!
+                                      </div>
+                                      <div *ngIf="item.get('name').errors.maxlength">
+                                        Name can contain maximum 50 characters!
+                                      </div>
+                                      <div *ngIf=" item.get('name').errors.pattern ">
+                                        Invalid Format for Name!
+                                      </div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].name" class="invalid-feedback">
+                                        {{ error_messages.inputs[index].name }}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-4 no-gutters">
+                                  <label class="col-md-12 pt-2" for="type">
+                                    Type
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <select class="form-control" id="type" formControlName="type">
+                                      <option value="text">Text</option>
+                                      <option value="file">File</option>
+                                    </select>
+                                    <div *ngIf="submitted && item.get('type').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('type').errors.required">Please Select Type!</div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].input_type" class="invalid-feedback">
+                                      {{ error_messages.inputs[index].input_type }}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-4 no-gutters">
+                                  <label class="col-md-12 pt-2" for="input_type">
+                                    Input Type
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <select class="form-control" id="input_type" formControlName="input_type">
+                                      <option value="static">Static</option>
+                                      <option value="form">Form</option>
+                                    </select>
+                                    <div *ngIf="submitted && item.get('input_type').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('input_type').errors.required">
+                                        Please Select Input Type!
+                                      </div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].data_type" class="invalid-feedback">
+                                      {{ error_messages.inputs[index].data_type }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row pb-3">
+
+                                <div class="col-md-3 no-gutters">
+                                  <label class="col-md-12 pt-2" for="x">
+                                    X
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <input class="form-control" id="x" formControlName="x" maxlength="5">
+                                    <div *ngIf="submitted && item.get('x').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('x').errors.required">Please Enter X!</div>
+                                      <div *ngIf="item.get('x').errors.pattern">Please Enter Valid Input!</div>
+                                      <div *ngIf="item.get('x').errors.minlength">X Should be atleast 1 Digit!</div>
+                                      <div *ngIf="item.get('x').errors.maxlength">X Can contain maximum 3 Digits!</div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].settings.dimension.x" class="invalid-feedback">
+                                      {{ error_messages.inputs[index].settings.dimension.x }}
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+
+                                <div class="col-md-3 no-gutters">
+                                  <label class="col-md-12 pt-2" for="y">
+                                    Y
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <input class="form-control" id="y" formControlName="y" maxlength="5">
+                                    <div *ngIf="submitted && item.get('y').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('y').errors.required">Please Enter Y!</div>
+                                      <div *ngIf="item.get('y').errors.pattern">Please Enter Valid Input!</div>
+                                      <div *ngIf="item.get('y').errors.minlength">Y Should be atleast 1 Digit!</div>
+                                      <div *ngIf="item.get('y').errors.maxlength">Y Can contain maximum 3 Digits!</div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].settings.dimension.y" class="invalid-feedback">
+                                      {{ error_messages.inputs[index].settings.dimension.y }}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-3 no-gutters">
+                                  <label class="col-md-12 pt-2" for="width">
+                                    Width
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <input class="form-control" id="width" formControlName="width" maxlength="5">
+                                    <div *ngIf="submitted && item.get('width').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('width').errors.required">Please Enter Width!</div>
+                                      <div *ngIf="item.get('width').errors.pattern">Please Enter Valid Input!</div>
+                                      <div *ngIf="item.get('width').errors.minlength">Width Should be atleast 1 Digit!</div>
+                                      <div *ngIf="item.get('width').errors.maxlength">Width Can contain maximum 5 Digits!</div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].settings.dimension.width" class="invalid-feedback">
+                                      {{ error_messages.inputs[index].settings.dimension.width }}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-3 no-gutters">
+                                  <label class="col-md-12 pt-2" for="height">
+                                    Height
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <input class="form-control" id="height" formControlName="height" maxlength="5">
+                                    <div *ngIf="submitted && item.get('height').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('height').errors.required">Please Enter Height!</div>
+                                      <div *ngIf="item.get('height').errors.pattern">Please Enter Valid Input!</div>
+                                      <div *ngIf="item.get('height').errors.minlength">Height Should be atleast 1 Digit!</div>
+                                      <div *ngIf="item.get('height').errors.maxlength">Height Can contain maximum 5 Digits!</div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].settings.dimension.height" class="invalid-feedback">
+                                      {{ error_messages.inputs[index].settings.dimension.height }}
+                                    </div>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                              <div class="row pb-3"
+                                *ngIf="item.controls.input_type.value == 'static' && item.controls.type.value == 'text'">
+                                <div class="col-md-12 no-gutters">
+                                  <label class="col-md-12 pt-2" for="static_text">
+                                    Static Text
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <input type="text" autocomplete="off" class="form-control" id="static_text"
+                                      formControlName="static_text" maxlength="50">
+                                    <div *ngIf="submitted && item.get('static_text').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('static_text').errors.required">Please Enter Text!</div>
+                                      <div *ngIf="item.get('static_text').errors.pattern">Invalid Text Input!</div>
+                                      <div *ngIf="item.get('static_text').errors.minlength">Text Should be atleast 3 characters!</div>
+                                      <div *ngIf="item.get('static_text').errors.maxlength">Text Can contain maximum 50 characters!</div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].static_text" class="invalid-feedback">
+                                      {{ error_messages.inputs[index].static_text }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row pb-3"
+                                *ngIf="item.controls.input_type.value == 'static' && item.controls.type.value == 'file'">
+                                <div class="col-md-12 no-gutters">
+                                  <label class="col-md-12 pt-2" for="static_file">
+                                    Static File
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <input type="file" class="form-control" id="static_file"
+                                    accept="image/x-png,image/gif,image/jpeg,image/jpg"
+                                      (change)="staticFileChange($event.target.files, index)"
+                                      formControlName="static_file">
+                                    <div *ngIf="submitted && item.get('static_file').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('static_file').errors.required">Please Enter Text!</div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].static_file" class="invalid-feedback">
+                                      {{ error_messages.inputs[index].static_file }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row pb-3"
+                                *ngIf="item.controls.input_type.value == 'form' && item.controls.type.value == 'file'">
+                                <div class="col-md-12 no-gutters">
+                                  <label class="col-md-12 pt-2" for="form_field">
+                                    Form Field
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <ng-container *ngIf="(moduleFormDropdown) as field">
+                                      <ng-multiselect-dropdown formControlName="form_field"
+                                        [placeholder]="'Select Form Field'" [settings]="dropdownSettingsFF"
+                                        [data]="moduleFormDropdown">
+                                      </ng-multiselect-dropdown>
+                                    </ng-container>
+                                    <div *ngIf="submitted && item.get('form_field').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('form_field').errors.required">Please Select Form Field!
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row pb-3"
+                                *ngIf="item.controls.input_type.value == 'form' && item.controls.type.value == 'text'">
+                                <div class="col-md-12 no-gutters">
+                                  <label class="col-md-12 pt-2" for="form_field">
+                                    Form Field
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <ng-container *ngIf="(moduleFormDropdownText) as field">
+                                      <ng-multiselect-dropdown formControlName="form_field"
+                                        [placeholder]="'Select Form Field'" [settings]="dropdownSettingsFF"
+                                        [data]="moduleFormDropdownText">
+                                      </ng-multiselect-dropdown>
+                                    </ng-container>
+                                    <div *ngIf="submitted && item.get('form_field').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('form_field').errors.required">Please Select Form Field!
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-md-12" *ngIf="item.controls.type.value == 'text'">
+
+                              <div class="row pb-3">
+
+                                <div class="col-md-3 no-gutters">
+                                  <label class="col-md-12 pt-2" for="font_size">
+                                    Font Size
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <input class="form-control" id="font_size" formControlName="font_size" maxlength="4">
+                                    <div *ngIf="submitted && item.get('font_size').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('font_size').errors.required">Please Enter Font Size!</div>
+                                      <div *ngIf="item.get('font_size').errors.minlength">Font Size Should be atleast 1 Digit!</div>
+                                      <div *ngIf="item.get('font_size').errors.maxlength">Font Size Can contain maximum 4 Digits!</div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].settings.dimension.font_size" class="invalid-feedback">
+                                      {{ error_messages.inputs[index].settings.dimension.font_size }}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-3 no-gutters">
+                                  <label class="col-md-12 pt-2" for="font_size">
+                                    Font Style
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <ng-container *ngIf="(font_styles) as font_styles">
+                                      <ng-multiselect-dropdown formControlName="font_style" [placeholder]="'Select Font Style'"
+                                        [settings]="dropdownSettingsFontStyle" [data]="font_styles.data">
+                                      </ng-multiselect-dropdown>
+                                    </ng-container>
+                                    <div *ngIf="submitted && item.get('font_style').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('font_style').errors.required">Please Enter Font Style!</div>
+                                    </div>
+                                    <div *ngIf="error_messages.inputs[index] && error_messages.inputs[index].settings.dimension.font_style" class="invalid-feedback">
+                                      {{ error_messages.inputs[index].settings.dimension.font_style }}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-3 no-gutters">
+                                  <label class="col-md-12 pt-2" for="font_color">
+                                    Font Color
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <input class="form-control" (colorPickerChange)="colorChanged($event, index)"
+                                      [(colorPicker)]="color1" [style.background]="'#fff'"
+                                      formControlName="font_color" />
+                                    <div *ngIf="submitted && item.get('font_color').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('font_color').errors.required">Please Select Font Color!
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-3 no-gutters">
+                                  <label class="col-md-12 pt-2" for="alignment_x">
+                                    Alignment X
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <select class="form-control" formControlName="alignment_x">
+                                      <option value="center">Center</option>
+                                      <option value="left">Left</option>
+                                      <option value="right">Right</option>
+                                    </select>
+                                    <div *ngIf="submitted && item.get('alignment_x').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('alignment_x').errors.required">Please Select Alignment X!
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-3 no-gutters">
+                                  <label class="col-md-12 pt-2" for="alignment_y">
+                                    Alignment Y
+                                    <span style="color:red;">*</span>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <select class="form-control" formControlName="alignment_y">
+                                      <option value="center">Center</option>
+                                      <option value="top">Top</option>
+                                      <option value="bottom">Bottom</option>
+                                    </select>
+                                    <div *ngIf="submitted && item.get('alignment_y').errors" class="invalid-feedback">
+                                      <div *ngIf="item.get('alignment_y').errors.required">Please Select Alignment Y!
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+
+                            <div class="float-right">
+                              <button type="button" (click)="onRemoveInput(index)" *ngIf="inputs.length!==1">Remove Row</button>
+                            </div>
+
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 text-right">
+                        <button type="button" (click)="onAddInput(true)">Add Row +</button>
+                      </div>
+                    </div>
+                    
+                  </div>
+
+                  <div class="form-actions center">
+                    <button type="button" [routerLink]="['/template']" [queryParams]="{campaign_id: campaign_id, module_id: module_id}" class="btn btn-raised btn-orange mr-1">
+                      <i class="ft-x"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-raised btn-primary">
+                      <i class="fa fa-check-square-o"></i>
+                      Save
+                    </button>
+                  </div>
+
+                </div>
+              </form>
+            </ng-container>
+
+            <ng-template #norecord>
+              <p>Data Loading...</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

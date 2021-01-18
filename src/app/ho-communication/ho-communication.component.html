@@ -1,0 +1,107 @@
+<app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card card-border-shadow-0">
+            <div class="card-header m-top-bottom-10">
+                <h4 class="card-title module-title">{{ title }}</h4>
+                <app-actionbtns
+                    [addRedirect]="'/ho-communication/add'" [showExport]="false" [showImport]="false">
+                </app-actionbtns>
+            </div>
+
+            <swal
+                #notificationSwal
+                title="Are you sure ?"
+                text="This will send notification to all the users in campaign"
+                icon="question"
+                [showCancelButton]="true"
+                [focusCancel]="true">
+            </swal>
+
+            <form name="searchForm" #searchForm="ngForm" class="">
+                <ng-container *ngIf="records; else loading">
+
+                    <div class="table-responsive">
+                        <p style="color:red;"><b>Note: Row cannot be modified once notification is sent!</b></p>
+                        <table class="table table-bordered table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Sr.No.</th>
+                                    <th>Title</th>
+                                    <th>HTML Content</th>
+                                    <th>Description</th>
+                                    <th>Last Modified</th>
+                                    <th>Send Notification</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <input type="text" name="title" ngModel class="form-control"
+                                            placeholder="Title" autocomplete="off" />
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                            <ng-container *ngIf="records; else loading">
+                                <tr *ngIf="!records.data.length">
+                                    <td [attr.colSpan]="5">No Records Found!</td>
+                                </tr>
+                                <tr *ngFor="let row of records.data; let i = index">
+                                    <td>
+                                        <a *ngIf="row.is_editable" class="ng2-smart-action ng2-smart-action-edit-edit"
+                                            [routerLink]="['/ho-communication/edit/' + row.id]"
+                                            [queryParams]="{campaign_id: campaign_id}">
+                                            <i class="ft-edit-2 info font-medium-1 mr-2"></i>
+                                        </a>
+                                    </td>
+                                    <th scope="row">
+                                        {{ (records.meta.pagination.current_page - 1) * records.meta.pagination.per_page + i + 1 }}
+                                    </th>
+                                    <td>{{ row.title }}</td>
+                                    <td><a (click)="show(mymodal, row, 'html')"><u>View HTML Content</u></a></td>
+                                    <td><a (click)="show(mymodal, row, 'description')"><u>View Description</u></a></td>
+                                    <td>{{ row.date }}</td>
+                                    <td><button style="color:#fff !important;" *ngIf="row.is_editable" [swal]="notificationSwal" (confirm)="sendNotification(row.id)" class="btn btn-primary">Send Notification</button></td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                    <hr/>
+
+                </ng-container>
+            </form>
+
+            <ng-template #mymodal let-modal>
+                <div class="modal-header">
+                  <h4 class="modal-title" id="modal-basic-title">{{ content_title }}</h4>
+                  <button type="button" class="btn" style="color:#fff !important; padding: 0 10px !important;
+                  font-size: 22px;" aria-label="Close" (click)="modal.dismiss('Cross click')">×
+                  </button>
+                </div>
+                <div class="modal-body" [innerHTML]="content">
+                </div>
+                <!-- <div class="modal-footer">
+                      <button type="button" class="btn btn btn-primary" style="color:#fff !important;" (click)="modal.close('Save click')">Ok</button>
+                </div> -->
+            </ng-template>
+
+        </div>
+        <ng-template #loading>
+            <tr><td colspan="5">Loading Data...</td></tr>
+        </ng-template>
+
+        <div *ngIf="records">
+            <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+              [collectionSize]="records.meta.pagination.total"
+              [pageSize]="records.meta.pagination.per_page"
+              [(page)]="records.meta.pagination.current_page"></ngb-pagination>
+          </div>
+    </div>
+</div>

@@ -1,0 +1,138 @@
+<div style="min-height: calc(100vh - 75px);">
+	<app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+	<section id="simple-table">
+		<div class="row">
+		<div class="col-sm-12">
+			<div class="card card-border-shadow-0">
+			<div class="card-header  m-top-bottom-10">
+				<h4 class="card-title module-title">Course</h4>
+					<app-actionbtns [showAdd]="false" [showExport]="showExport" [uploadFields]="uploadFields" (uploadFile)="upload($event)"
+						(uploaded)="fileChange($event)" (download)="export()">
+					</app-actionbtns>
+			</div>
+	
+			<div class="row pt-1">
+				<!--<div class="col-md-4 pt-2" *ngIf="showCompanyFilter">
+					<ng-container *ngIf="(companyData | async) as resultData">
+					<ng-multiselect-dropdown [(ngModel)]="company_id"
+						[placeholder]=" 'Select Company'" (onSelect)="search()" (onDeSelect)="search()" [settings]="dropdownSettingsCompany" [data]="resultData.data">
+					</ng-multiselect-dropdown>
+					</ng-container>
+				</div>-->
+				
+				<div class="col-md-4 pt-2">
+				<input type="text" (keyup)="search()" class="form-control" placeholder="Search By Name"
+							[(ngModel)]="course_name">
+				</div>
+	
+			</div>
+			
+	
+			<swal
+				#deleteSwal
+				title="Are you sure ?"
+				text="This cannot be undone"
+				icon="question"
+				[showCancelButton]="true"
+				[focusCancel]="true">
+			</swal>
+	
+			<div class="card-body" class="row">
+				<ng-container *ngIf="(courseData | async) as result; else loading">
+				<div class="col-lg-12 mt-2">
+				<div class="pull-right"><b class="tot-record">Total Records : {{ result.meta?.pagination?.total }}</b></div>
+				</div>
+	
+				<div *ngIf="!result.data.length">
+					<div [attr.colSpan]="6">No Records Found!</div>
+				</div>
+	
+				<!-- <div class="col-lg-4 col-sm-6 col-container" [routerLink]="'/course/add'" [queryParams]="{campaign_id: campaign_id}">
+					<div class="card col-cell border-orange">
+					<div class="card-header text-center p-4">
+						<img src="assets/img/logos/add-button-tp-bg.png" alt="">
+						<h5 style="color: #F7941E;">Add Course</h5>
+					</div>
+					</div>
+				</div> -->
+	
+				<div class="col-lg-4 col-sm-6 col-container" [routerLink]="'/course/add'" [queryParams]="{campaign_id: campaign_id}">
+					<div class="card col-cell-add">
+						<div class="text-center p-4">
+							<div class="row">
+								<div class="col-md-7">
+									<h5 style="color: #505050;font-size: 25px;">Add Course</h5>
+								</div>
+								<div class="col-md-5">
+									<img src="assets/img/logos/add-button-tp-bg.png" alt="">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-container" *ngFor="let row of result.data; let i=index">
+					<div class="card col-cell" (click)="courseDashboard(row.id)">
+					<div class="row">
+						<div class="col-8" >
+							<a *ngIf="showEdit" class="ml-2 ng2-smart-action ng2-smart-action-edit-edit"
+							[routerLink]="['/course/edit/' + row.id]"
+							[queryParams]="{campaign_id: campaign_id}">
+								<i class="ft-edit-2 info font-medium-1 mr-2"></i>
+							</a>
+						</div>
+						<div class="col-4"><div class="text-right ">
+						
+						<a [swal]="deleteSwal" (confirm)="delete(row.id)" *ngIf="showDelete" class="ng2-smart-action ng2-smart-action-delete-delete">
+							<i class="ft-trash-2 danger font-medium-1 mr-2"></i>
+						</a>
+						</div>
+						</div>
+					</div>
+					<div class="row">
+						<table style="border: none !important;width: 100%;">
+							<tbody>
+								<tr>
+									<td style="width: 35%;text-align: center;">
+										<img src="assets/img/course-vector.png" style="margin:5px;">
+									</td>
+									<td style="width: 65%;">
+										<h4 class="camp-title"> <a>{{ row.name }} </a> </h4>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- <div class="text-center"><img  src="assets/img/camp.svg" width="40px" style="margin:5px;"></div> 
+					<div class="card-header text-center flex-column" style="flex: auto">
+						<h5> <a> {{ row.name }} </a> </h5>
+					</div> -->
+					
+						<div class="row">
+						<div class="col-lg-6 col-sm-6 col-6 text-center  p-1" [routerLink]="['/section']" [queryParams]="{campaign_id: campaign_id,course_id: row.id}"  style="border-right: 1px solid #f3f1f1;">
+							<span class="file-counter-container" >{{row.section}}</span><br/>
+							<span class="camp-code">Section</span> 
+						</div>
+
+						<div class="col-lg-6 col-sm-6 col-6 text-center" [routerLink]="['/section/add']" [queryParams]="{campaign_id: campaign_id,course_id: row.id}"  style="border-bottom: 1px solid #f3f1f1;">
+							<span ><img src="assets/img/logos/add-button-tp-bg.png" style="width: 30px;"></span><br/>
+							<span class="camp-code">Add Section</span>
+						</div>
+						</div>
+					</div>
+				</div>
+				</ng-container>
+	
+				<ng-template #loading>Loading Data...</ng-template>
+	
+			</div>
+			<div *ngIf="courseData | async as records">
+				<ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+				[collectionSize]="records.meta.pagination.total"
+				[pageSize]="records.meta.pagination.per_page"
+				[(page)]="records.meta.pagination.current_page"></ngb-pagination>
+			</div>
+			</div>
+		</div>
+		</div>
+	</section>
+</div>

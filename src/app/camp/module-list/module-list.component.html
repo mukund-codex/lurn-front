@@ -1,0 +1,64 @@
+<table class="table table-bordered">
+  <tr>
+    <th>Sr. No.</th>
+    <th>Module Name</th>
+    <th>Action</th>
+  </tr>
+
+  <tr *ngFor="let module of modules; let i=index">
+    <td>{{ i + 1 }}</td>
+    <td>{{ module.name }}
+      <p *ngIf="selected_languages[i]">
+        Languages: {{ selected_languages[i] | json }}
+      </p>
+      <p *ngIf="selected_specialities[i]">
+        Specialities: {{ selected_specialities[i] | json }}
+      </p>
+
+
+    </td>
+    <td>
+      <div *ngIf="module.addFlag">
+        <button type="button" class="btn btn-lg btn-outline-primary"
+          (click)="showSpeciality(content, module.id)">Add</button>
+      </div>
+      <div *ngIf="module.removeFlag">
+        <button type="button" class="btn btn-lg btn-outline-primary" (click)="removeValues(module.id)">Remove</button>
+      </div>
+    </td>
+
+    <ng-template #content let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button #myButton type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="campModuleForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <input type="hidden" formControlName="module_id">
+          <p>Languages:</p>
+          <ng-container *ngIf="languages">
+            <ng-multiselect-dropdown formControlName="language_id" [placeholder]="'Select Languages'" [data]="languages"
+              [settings]="dropdownSettings">
+            </ng-multiselect-dropdown>
+          </ng-container>
+
+          <p>Specialities:</p>
+          <ng-container *ngIf="(specialityData | async) as specialities">
+            <ng-multiselect-dropdown formControlName="speciality_id" [placeholder]="'Select Specialities'"
+              [data]="specialities.data" [settings]="dropdownSettings">
+            </ng-multiselect-dropdown>
+          </ng-container>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-secondary btn-raised">OK</button>
+        </div>
+      </form>
+    </ng-template>
+
+
+  </tr>
+</table>

@@ -1,0 +1,165 @@
+<section id="basic-form-layouts">
+	<div class="row match-height">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="px-3">
+						<ng-container *ngIf="buildForm; else norecord">
+							<form class="form form-horizontal striped-rows" [formGroup]="hcForm"
+								(submit)="onSubmit()" enctype="multipart/form-data">
+								<div class="form-body">
+									<h4 class="form-section">
+										<i class="ft-octagon"></i>
+										{{ title }}
+									</h4>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="title">
+												Title
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="text" formControlName="title" maxlength="50"
+													class="form-control" id="title" autocomplete="off" />
+												<div *ngIf="submitted && hcForm.get('title').errors"
+													class="invalid-feedback">
+													<div *ngIf="hcForm.get('title').errors.required">
+														Title is required!
+													</div>
+													<div *ngIf="hcForm.get('title').errors.pattern">
+														Title format is invalid!
+													</div>
+													<div *ngIf="hcForm.get('title').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="hcForm.get('title').errors.maxlength">
+														Title too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.title" class="invalid-feedback">
+													{{ error_messages.title }}
+												</div>
+												
+											</div>
+										</div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <label class="col-md-3 pt-1" for="html">
+                                                Description
+                                            </label>
+                                            <div class="col-md-9">
+                                                <textarea class="form-control" formControlName="description"rows="5" style="resize:none;"></textarea>
+                                                <div *ngIf="submitted && hcForm.get('description').errors"
+													class="invalid-feedback">
+													<div *ngIf="hcForm.get('description').errors.required">
+														Description is required!
+													</div>
+													<div *ngIf="hcForm.get('description').errors.pattern">
+														Description format is invalid!
+													</div>
+													<div *ngIf="hcForm.get('description').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="hcForm.get('description').errors.maxlength">
+														Description too long!
+													</div>
+												</div>
+												<div *ngIf="error_messages.description" class="invalid-feedback">
+													{{ error_messages.description }}
+												</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <label class="col-md-3 pt-1" for="html">
+                                                HTML Content
+                                            </label>
+                                            <div class="col-md-9">
+                                                <ckeditor formControlName="html_content" placeholder="Type Here" [editor]="Editor" data=""></ckeditor>
+                                                <div *ngIf="submitted && hcForm.get('html_content').errors"
+													class="invalid-feedback">
+													<div *ngIf="hcForm.get('html_content').errors.required">
+														HTML Content is required!
+													</div>
+													<div *ngIf="hcForm.get('html_content').errors.pattern">
+														HTML Content format is invalid!
+													</div>
+													<div *ngIf="hcForm.get('html_content').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="hcForm.get('html_content').errors.maxlength">
+														HTML Content too long!
+													</div>
+												</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div formArrayName="media" *ngFor="let item of hcForm.get('media')['controls']; let index = index;">
+                                        <div [formGroupName]="index" class="form-group row mb-0">
+                                            <label class="col-md-2 pt-1" for="video">Media</label>
+                                            <div class="form-group col-md-10">
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <label class="col-md-3 pt-1" for="html">
+                                                            Media {{ index + 1 }}
+                                                        </label>
+                                                        <div class="col-md-9">
+															<div *ngIf="selectedFiles[index]">
+																<a [href]="selectedFiles[index].url">Preview File</a><br>
+															</div>
+															<input type="file" *ngIf="!selectedFiles[index]" (change)="mediaFileChange($event.target.files, index)" class="form-control" formControlName="file">
+															<div *ngIf="error_messages && error_messages['media.'+index]" class="invalid-feedback">
+																{{ error_messages['media.'+index] }}
+															</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="float-right">
+                                                        <button type="button" class="btn btn-raised btn-danger" (click)="onRemoveMedia(index)" *ngIf="media.length!==1">Remove Media -</button>
+                                                      </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12 text-left">
+                                                <button type="button" class="btn btn-raised btn-primary" (click)="onAddMedia(true)">Add Media +</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+									<div class="form-actions center">
+										<div class="col-md-1"></div>
+										<div class="col-sm-11">
+											<a [routerLink]="['/ho-communication']" [queryParams]="{campaign_id: campaign_id}" class="btn btn-raised btn-orange mr-1">
+												<i class="ft-x"></i>
+												Cancel
+											</a>
+
+											<button type="submit" class="btn btn-raised btn-primary">
+												<i class="fa fa-check-square-o"></i>
+												Save
+											</button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</ng-container>
+
+						<ng-template #norecord>
+							<p>Loading Data...</p>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

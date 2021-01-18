@@ -1,0 +1,382 @@
+<section id="basic-form-layouts">
+	<div class="row match-height">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="px-3">
+						<ng-container *ngIf="buildForm; else norecord">
+							<form class="form form-horizontal striped-rows" [formGroup]="lessonForm"
+								(submit)="onSubmit()" enctype="multipart/form-data">
+								<div class="form-body">
+									<h4 class="form-section">
+										<i class="ft-user"></i>
+										{{ title }}
+									</h4>
+
+									<div class="form-group">
+										<div class="row">
+											
+												<label for="section" class="col-md-3">
+													Section
+													<span style="color:red">*</span>
+												</label>
+
+												<div class="col-md-9">
+												
+												<ng-container *ngIf="(sectionData | async) as section" >
+													<ng-multiselect-dropdown formControlName="section"
+														[placeholder]="'Select Section'" [settings]="dropdownSettingsSingle"
+														[data]="section.data">
+													</ng-multiselect-dropdown>
+												</ng-container>
+												<div *ngIf="lessonForm.get('section').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('section').errors.required">
+														Section is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.section" class="invalid-feedback">
+													{{ error_messages.section }}
+												</div>
+											</div>
+											
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="title">
+												Title
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="text" formControlName="title" maxlength="50"
+													class="form-control" id="title" autocomplete="off" />
+												<div *ngIf="submitted && lessonForm.get('title').errors"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('title').errors.required">
+														 Title is required!
+													</div>
+													<div *ngIf="lessonForm.get('title').errors.pattern">
+														 Title format is invalid!
+													</div>
+													<div *ngIf="lessonForm.get('title').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="lessonForm.get('title').errors.maxlength">
+														Title too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.title" class="invalid-feedback">
+													{{ error_messages.title }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="description">
+												Description
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												
+													<!--<textarea type="text" formControlName="description" id="description" class="form-control" autocomplete="off"
+													></textarea>-->
+													
+													<ckeditor formControlName="description"  [editor]="Editor"  data=""></ckeditor>
+
+													<div *ngIf="submitted && lessonForm.get('description').errors"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('description').errors.required">
+														 Description is required!
+													</div>
+													
+													<div *ngIf="error_messages.description" class="invalid-feedback">
+														{{ error_messages.description }}
+													</div>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+									
+
+									<div *ngIf="(typesData) as typesData">
+										<div class="form-group">
+											<div class="row">
+												<label class="col-md-3 pt-1" for="type">
+													Type
+													<span style="color:red;">*</span>
+												</label>
+												<div class="col-md-9">
+													<ng-multiselect-dropdown formControlName="type" 
+													[disabled]="disabled"
+														[placeholder]="'Select Type'" [settings]="dropdownSettingsSingle"
+														[data]="typesData"
+														(change)="elementTouched(lessonForm.get('type'))">
+													</ng-multiselect-dropdown>
+												<div *ngIf="submitted && lessonForm.get('type').errors"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('type').errors.required">
+														 Type is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.type" class="invalid-feedback">
+													{{ error_messages.type }}
+												</div>
+
+												
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group" *ngIf="showField.html">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="content">
+												HTML Content
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<!--<input type="text" formControlName="content" 
+													class="form-control" id="content" autocomplete="off" />-->
+												
+													<ckeditor formControlName="content"  [editor]="Editor"  data=""></ckeditor>
+												<div *ngIf="submitted && lessonForm.get('content').errors"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('content').errors.required">
+														 Content is required!
+													</div>
+													<div *ngIf="lessonForm.get('content').errors.pattern">
+														Content format is invalid!
+												   </div>
+												</div>
+												<div *ngIf="error_messages.content" class="invalid-feedback">
+													{{ error_messages.content }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									<div  *ngIf="showField.video">
+										<div class="form-group" *ngIf="(videoTypeData) as videoTypeData">
+											<div class="row">
+												<label class="col-md-3 pt-1" for="video_type">
+													Video Type
+													
+												</label>
+												<div class="col-md-9">
+													<ng-multiselect-dropdown formControlName="video_type" 
+													[disabled]="disabled"
+														[placeholder]="'Select Video Type'" [settings]="dropdownSettingsSingle"
+														[data]="videoTypeData"
+														(click)="elementTouched(lessonForm.get('video_type'))">
+													</ng-multiselect-dropdown>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group" *ngIf="showField.article">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="article_link">
+												Article Link
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="text" formControlName="article_link" maxlength="255"
+													class="form-control" id="article_link" autocomplete="off" />
+												
+												<div *ngIf="submitted && lessonForm.get('article_link').errors"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('article_link').errors.required">
+														 Article Link is required!
+													</div>
+													<div *ngIf="lessonForm.get('article_link').errors.pattern">
+														Article Link format is invalid!
+												   </div>
+												</div>
+												<div *ngIf="error_messages.article_link" class="invalid-feedback">
+													{{ error_messages.article_link }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+									<div class="form-group" *ngIf="showField.video">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="video_link_id">
+												Video Link
+												
+											</label>
+											<div class="col-md-9">
+												<input type="text" formControlName="video_link_id" maxlength="255"
+													class="form-control" id="video_link_id" autocomplete="off" />
+												
+												<div *ngIf="submitted && lessonForm.get('video_link_id').errors"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('video_link_id').errors.required">
+														 Video Link ID is required!
+													</div>
+													<div *ngIf="lessonForm.get('video_link_id').errors.pattern">
+														Video Link ID format is invalid!
+												   </div>
+												</div>
+												<div *ngIf="error_messages.video_link_id" class="invalid-feedback">
+													{{ error_messages.video_link_id }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group" *ngIf="showField.video || showField.image || showField.pdf">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="mediaFile">
+												Media File
+											</label>
+											<div class="col-md-9">
+												<input *ngIf="showField.video" type="file" formControlName="mediaFile" class="form-control" accept="video/mp4"
+													id="mediaFile" (change)="logoChange($event.target.files)"/>
+
+												<input *ngIf="showField.image" type="file" formControlName="mediaFile" class="form-control" accept="image/x-png,image/gif,image/jpeg,image/jpg"
+													id="mediaFile" (change)="logoChange($event.target.files)"/>
+
+												<input *ngIf="showField.pdf" type="file" formControlName="mediaFile" class="form-control" accept="application/pdf"
+													id="mediaFile" (change)="logoChange($event.target.files)"/>
+												<span *ngIf="currentLogo">
+													<p>Previously Selected Media :</p>
+													<a href="{{ currentLogo }}" target="_blank">Click here</a>
+												</span>
+												<div *ngIf="currentLogo === ''">
+													<div *ngIf="submitted && lessonForm.get('mediaFile').errors"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('mediaFile').errors.required">
+														 Media File is required!
+													</div>
+													<div *ngIf="lessonForm.get('mediaFile').errors.pattern">
+														Media File format is invalid!
+												   </div>
+													</div>
+													<div *ngIf="error_messages.mediaFile" class="invalid-feedback">
+														{{ error_messages.mediaFile }}
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="dependent">
+												Dependant
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<select class="form-control" formControlName="dependent" id="dependent">
+													<option value="true">True</option>
+													<option value="false">False</option>
+												</select>
+												<div *ngIf="submitted && lessonForm.get('dependent').errors"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('dependent').errors.required">
+														Dependent is required!
+													</div>
+													<div *ngIf="lessonForm.get('dependent').errors.pattern">
+														Dependent format is invalid!
+												   </div>
+												</div>
+												<div *ngIf="error_messages.dependent" class="invalid-feedback">
+													{{ error_messages.dependent }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group" *ngIf="lessonForm.get('dependent').value !== 'false'" >
+										<div class="row">
+											<label for="dependent_on" class="col-md-3">
+												Dependant On
+											</label>
+											<div class="col-md-9">
+												<ng-container *ngIf="(lessonData | async) as lesson" >
+													<ng-multiselect-dropdown formControlName="dependent_on"
+														[placeholder]="'Select Dependant On'" [settings]="dropdownSettings"
+														[data]="lesson.data" (click)="elementTouched(lessonForm.get('dependent_on'))">
+													</ng-multiselect-dropdown>
+												</ng-container>
+												<div *ngIf="lessonForm.get('dependent_on').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('dependent_on').errors.required">
+														Dependant On is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.dependent_on" class="invalid-feedback">
+													{{ error_messages.dependent_on }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="sort_order">
+												Sort Order
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="number" formControlName="sort_order" 
+													class="form-control" id="sort_order" min="1" autocomplete="off" />
+												
+												<div *ngIf="submitted && lessonForm.get('sort_order').errors"
+													class="invalid-feedback">
+													<div *ngIf="lessonForm.get('sort_order').errors.required">
+														 Sort Order is required!
+													</div>
+													<div *ngIf="lessonForm.get('sort_order').errors.pattern">
+														Sort Order format is invalid!
+												   </div>
+												</div>
+												
+												<div *ngIf="error_messages.sort_order" class="invalid-feedback">
+													{{ error_messages.sort_order }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									<div class="form-actions center">
+										<div class="col-md-3"></div>
+										<div class="col-sm-9">
+											<a [routerLink]="['/lesson']" [queryParams]="{section_id:section_id,campaign_id: campaign_id,course_id:course_id}" class="btn btn-raised btn-orange mr-1">
+												<i class="ft-x"></i>
+												Cancel
+											</a>
+
+											<button type="submit" class="btn btn-raised btn-primary">
+												<i class="fa fa-check-square-o"></i>
+												Save
+											</button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</ng-container>
+
+						<ng-template #norecord>
+							<p>Loading Data...</p>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

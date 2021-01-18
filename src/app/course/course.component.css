@@ -1,0 +1,63 @@
+.col-container{
+    display: flex;
+    width: 100%;
+    cursor: pointer;
+}
+.col-cell-add{
+    flex: 1;
+    display: flex;
+    border-radius: 10px;
+    border: 1px solid #EFDB7E;
+    background: linear-gradient(179.73deg, #FFFBED 0.24%, #FCE492 146.48%), #F1F1F1;
+    transition: background-color 0.5s;
+    transition: border 0.5s;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.16);
+}
+.col-cell{
+    flex: 1;
+    display: flex;
+    border-radius: 10px;
+    padding: 3px;
+    border: 1px solid #ECE7FF;
+    background: linear-gradient(180deg, #FCF3FA 22.79%, #FFE6FA 129.93%), #FCF2FA;
+    transition: ease-in-out 0.3s;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 8%);
+}
+
+.col-cell:hover{
+    background-color: #fffde9;
+    transform: translate(0px, -8px);
+   box-shadow: 0px 8px 9px 0px rgb(0 0 0 / 22%);
+}
+.border-orange{
+    border: 4px solid #F7941E;
+}
+
+.delete-right
+{
+    position: relative;
+    top: -10px;
+    right: -16px;
+}
+
+.delete-right i
+{
+    transition: background-color 0.5s !important;
+}
+
+.delete-right i:hover{
+    font-weight: bold;
+    transform: rotate(180deg) !important;
+    background-color: red;
+    color: #fff !important;
+}
+.camp-code{
+    font-weight: 600;
+    margin: 0px 5px;
+    color: #54339E;
+}
+h4.camp-title{
+    font-size:18px;
+    text-decoration: none;
+}
+

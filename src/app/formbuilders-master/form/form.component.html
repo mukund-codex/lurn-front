@@ -1,0 +1,66 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+<section id="basic-form-layouts">
+  <div class="row match-height">
+    <div class="col-md-12 p-0">
+      <ng-container *ngIf="buildForm; else norecord">
+        <div class="card">
+          <div class="card-body">
+            <div class="px-3">
+              <form class="form form-horizontal striped-rows" [formGroup]="formbuildersForm" (submit)="onSubmit($event)">
+
+                <div class="form-body">
+                  <h4 class="form-section">
+                    <i class="ft-user"></i>
+                    {{ title }}
+                  </h4>
+                  
+                  <div class="form-group">
+                    <div class="row">
+                      <label class="col-md-3 pt-1" for="name">
+                        Formbuilder Name
+                        <span style="color:red;">*</span>
+                      </label>
+                      <div class="col-md-9">
+                        <input type="text" formControlName="name" maxlength="50" class="form-control" id="name"
+                          autocomplete="off" />
+                        <div *ngIf="formbuildersForm.get('name').errors && submitted"
+                          class="invalid-feedback">
+                          <div *ngIf="formbuildersForm.get('name').errors.required">
+                            Formbuilder Name is required!
+                          </div>
+                          <div *ngIf="formbuildersForm.get('name').errors.minlength">
+                            Please Enter atleast 3 Characters!
+                          </div>
+                          <div *ngIf="formbuildersForm.get('name').errors.maxlength">
+                            Form Builder Name too long!
+                          </div>
+                          <div *ngIf="formbuildersForm.get('name').errors.pattern">
+                            Name format is invalid!
+                          </div>
+                        </div>
+                        <div *ngIf="error_messages.name" class="invalid-feedback">
+                          {{ error_messages.name }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center p-3">
+                  <h2>Build Form</h2>
+                </div>
+                <div id="stage1" class="build-wrap"></div>
+                <div *ngIf="formDataError" class="invalid-feedback">Please Select atleast one field!</div>
+                </form>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #norecord>
+        <p>Loading Data...</p>
+    </ng-template>
+    </div>
+  </div>
+</section>

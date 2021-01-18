@@ -1,0 +1,92 @@
+<div style="min-height: calc(100vh - 75px);">
+    <app-topbar *ngIf="isAccessible" (changeCampaign)="changeCampaign($event)"></app-topbar>
+    <section id="simple-table">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-border-shadow-0">
+                    <div class="card-header m-top-bottom-10 px-3">
+                        <h4 class="card-title module-title">{{ title }}</h4>
+                        <app-actionbtns [showAdd]="false" [showImport]="false" [showExport]="showExport" (download)="export()">
+                        </app-actionbtns>
+                    </div>
+                    <div class="card-body">
+                        <div class="px-3">
+                            <form name="searchForm" #searchForm="ngForm" ngForm class="table-responsive">
+                            <div class="card-block" *ngIf="records">
+                                
+                                    <table class="table table-bordered table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr. No</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Email Id</th>
+                                                <th>Mobile</th>
+                                                <th>Username</th>
+                                                <th>Total Lessons</th>
+                                                <th>Viewed Lessons</th>
+                                                <th>Progress</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                             <tr>
+                                                <td></td>
+                                                <td>
+                                                    <input type="text" name="first_name" ngModel class="form-control"
+                                                        placeholder="first_name" autocomplete="off" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="last_name" ngModel class="form-control"
+                                                        placeholder="last_name" autocomplete="off" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="email_id" ngModel class="form-control"
+                                                        placeholder="email_id" autocomplete="off" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="mobile" ngModel class="form-control"
+                                                        placeholder="mobile" autocomplete="off" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="username" ngModel class="form-control"
+                                                        placeholder="username" autocomplete="off" />
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <ng-container>
+                                                <tr *ngIf="!records.data.length">
+                                                    <td [attr.colSpan]="3">No Records Found!</td>
+                                                </tr>
+                                                <tr *ngFor="let row of records.data; let i=index">
+                                                    <th scope="row">
+                                                        {{ ((records.current_page - 1) * records.per_page) + i + 1 }}
+                                                    </th>
+                                                    <td>{{ row.first_name }}</td>
+                                                    <td>{{ row.last_name }}</td>
+                                                    <td>{{ row.email_id }}</td>
+                                                    <td>{{ row.mobile }}</td>
+                                                    <td>{{ row.username }}</td>
+                                                    <td>{{ row.tot_lesson }}</td>
+                                                    <td>{{ row.tot_view }}</td>
+                                                    <td>{{ row.progress }} % </td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                
+                                <div *ngIf="records">
+                                    <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                                        [collectionSize]="records.total"
+                                        [pageSize]="records.per_page"
+                                        [(page)]="records.current_page"></ngb-pagination>
+                                </div>
+                            </div>
+                        </form>
+                            <ng-template #loading>Loading Data...</ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

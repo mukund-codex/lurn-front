@@ -1,0 +1,20 @@
+.modal-dialog {
+    max-width: 500px;
+    margin: 8.75rem auto !important;
+}
+
+.modal-body {
+    max-height:350px;
+    overflow-y: scroll;
+}
+
+#mymodal {
+    z-index: 99999;
+    background-color: rgba(255,255,255,0.6);
+    max-height: 100px;
+}
+
+.modal-header{
+    background-image: linear-gradient(-60deg, #ff58588f 0%, #f098198f 100%);
+    color: #fff;
+}

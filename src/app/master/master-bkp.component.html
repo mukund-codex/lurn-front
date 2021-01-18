@@ -1,0 +1,76 @@
+<section id="simple-table">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card card-border-shadow-0">
+          <div class="card-header">
+            <h4 class="card-title">Master</h4>
+          </div>
+  
+          <div class="card-body">
+            <div style="float:right;margin-bottom: 10px;">
+              <a class="btn btn-raised btn-orange m-1" [routerLink]="['/master/add']" [queryParams]="{ campaign_id: campaign_id, module_id: module_id}">
+                <i class="ft-plus-circle white warning font-medium-1" style="color: #fff !important;"></i>
+              </a>
+            </div>
+  
+            <div class="card-block">
+              <div class="table-responsive">
+  
+                <table class="table table-bordered table-condensed">
+                  <thead>
+                    <tr>
+                      <th>Action</th>
+                      <th>Sr. No</th>
+                      <th>Master File Name</th>
+                      <th>Module Name</th>
+                      <th>Language Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td><input type="text" (keyup)="search()" class="form-control" placeholder="Search By Name"
+                          [(ngModel)]="name"></td>
+                      <td><input type="text" (keyup)="search()" class="form-control" placeholder="Search By Module"
+                          [(ngModel)]="module_name"></td>
+                      <td><input type="text" (keyup)="search()" class="form-control" placeholder="Search By Language"
+                          [(ngModel)]="language_name"></td>
+                    </tr>
+  
+                    <ng-container *ngIf="records; else loading">
+                      <tr *ngIf="!records.data.length">
+                        <td [attr.colSpan]="5">No Records Found!</td>
+                      </tr>
+                      <tr *ngFor="let row of records.data; let i=index">
+                        <td>
+                          <a class="ng2-smart-action ng2-smart-action-edit-edit" [routerLink]="['/master/edit/' + row.id]" [queryParams]="{ campaign_id: campaign_id, module_id: module_id}">
+                            <i class="ft-edit-2 info font-medium-1 mr-2"></i>
+                          </a>
+                          <a class="ng2-smart-action ng2-smart-action-delete-delete" (click)="delete(row.id)">
+                            <i class="ft-x danger font-medium-1 mr-2"></i>
+                          </a>
+                        </td>
+                        <th scope="row">
+                          {{ ((records.meta.pagination.current_page - 1) * records.meta.pagination.per_page) + i + 1 }}
+                        </th>
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.module?.name }}</td>
+                        <td>{{ row.language.name }}</td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              <div *ngIf="records">
+                <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                  [collectionSize]="records.meta.pagination.total" [pageSize]="records.meta.pagination.per_page"
+                  [(page)]="records.meta.pagination.current_page"></ngb-pagination>
+              </div>
+            </div>
+            <ng-template #loading>Loading Master Data</ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

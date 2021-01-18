@@ -1,0 +1,176 @@
+<section id="simple-table">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div [style.display]="showModal ? 'block' : 'none'" class="modal overlay" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel" *ngIf="selected_template_name">Add Template Same as {{ selected_template_name }}</h4>
+            </div>
+            <form [formGroup]="templateForm" (ngSubmit)="onSubmit()">
+      
+            <div class="modal-body">
+                <div class="row">
+      
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Template Name</label>
+                      <input type="text" formControlName="name" class="form-control" minlength="3" maxlength="50"
+                       [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                      
+                       <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">Template Name is required!</div>
+                        <div *ngIf="f.name.errors.minlength">Template Name should be atleast 3 characeters!</div>
+                        <div *ngIf="f.name.errors.maxlength">Template Name can be maximum 50 characeters!</div>
+                        <div *ngIf="f.name.errors.pattern">Please enter a valid Template Name!</div>
+                      </div>
+                    </div>
+                  </div>
+      
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Language Name</label>
+      
+                      <ng-container *ngIf="module_languages">
+                        <ng-multiselect-dropdown formControlName="language_id" [placeholder]="'Select Language'"
+                          [settings]="dropdownSettingsLanguage" [data]="module_languages">
+                        </ng-multiselect-dropdown>
+                      </ng-container>
+      
+                      <div *ngIf="submitted && f.language_id.errors" class="invalid-feedback">
+                        <div *ngIf="f.language_id.errors.required">Please Select Language!</div>
+                      </div>
+                    </div>
+                  </div>
+      
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Template</label>
+      
+                      <input type="file" formControlName="file" class="form-control" 
+                      (change)="fileChange($event.target.files)"
+                        [ngClass]="{ 'is-invalid': submitted && f.file.errors }" 
+                        accept="image/x-png,image/gif,image/jpeg,image/jpg" />
+      
+                      <div *ngIf="submitted && f.file.errors" class="invalid-feedback">
+                          <div *ngIf="f.file.errors">Please Select File!</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" style="color: #fff !important;">Submit</button>
+              <button type="button" class="btn btn-dark pull-right" data-dismiss="modal" (click) = "hide()">Close</button>
+            </div>
+          </form>
+            
+          </div>
+        </div>
+        </div>
+
+      <div class="card card-border-shadow-0">
+        <div class="card-header m-top-bottom-10">
+          <h4 class="card-title module-title">{{ title }}</h4>
+          <app-actionbtns [addRedirect]="'/template/add'" [showImport]="false"
+            [showExport]="showExport" [showAdd]="false">
+          </app-actionbtns>
+        </div>
+
+        <div class="row pt-1">
+          <div class="col-md-6 pt-2">
+            <ng-container *ngIf="(languages | async) as resultData">
+              <ng-multiselect-dropdown [(ngModel)]="language_id"
+                [placeholder]=" 'Select Language'" (onDeSelect)="search()" (onSelect)="search()" [settings]="dropdownSettingsLanguage" [data]="resultData.data">
+              </ng-multiselect-dropdown>
+            </ng-container>
+          </div>
+          <div class="col-md-6 pt-2">
+             <input type="text" (keyup)="search()" class="form-control" placeholder="Search By Name"
+                        [(ngModel)]="template_name">
+          </div>
+        </div>
+
+        <swal
+					#deleteSwal
+					title="Are you sure ?"
+					text="This cannot be undone"
+					icon="question"
+					[showCancelButton]="true"
+					[focusCancel]="true">
+        </swal>
+
+        <div class="card-body">
+          <p *ngIf="message">{{ message.text }}</p>
+          <div class="card-block">
+            <form name="searchForm" #searchForm="ngForm">
+              <div class="card-body" class="row">
+                <ng-container *ngIf="records as result; else loading">
+                  <div *ngIf="!result.data.length">
+                    <div [attr.colSpan]="6"></div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-container" [routerLink]="'/template/add'" [queryParams]="{campaign_id: campaign_id, module_id: module_id}">
+                    <div class="card col-cell border-orange">
+                      <div class="card-header text-center p-4">
+                        <img src="assets/img/logos/add-button-tp-bg.png" alt="">
+                        <h5 style="color: #F7941E;">Add Template</h5>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-4 col-sm-6 col-container" *ngFor="let row of result.data; let i=index">
+                    <div class="card col-cell">
+      
+                      <div class="row p-1">
+                        <div class="col-6 text-left">
+                          <div class="a float-left" *ngIf="row.type == 'gif'">
+                            <img src="assets/img/logos/gif-icon.png">
+                          </div>
+                          <div class="a float-left" *ngIf="row.type == 'video'">
+                            <img src="assets/img/logos/video-icon.png">
+                          </div>
+                          <div class="a float-left" *ngIf="row.type == 'image'">
+                            <img src="assets/img/logos/poster-icon.png">
+                          </div>
+                        </div>
+
+                        <div class="col-6 text-right">
+                          <a class="" (click)="cloneTemplate(row.id)">
+                            <i class="ft-copy info font-medium-1 mr-2"></i>
+                          </a>
+                          <a class="ng2-smart-action ng2-smart-action-edit-edit" [routerLink]="['/template/edit/' + row.id]" [queryParams]="{ campaign_id: campaign_id, module_id: module_id}">
+                            <i class="ft-edit-2 info font-medium-1 mr-2"></i>
+                          </a>
+                          <a [swal]="deleteSwal" (confirm)="delete(row.id)" *ngIf="showDelete" class="ng2-smart-action ng2-smart-action-delete-delete">
+                            <i class="ft-x danger font-medium-1 mr-2"></i>
+                          </a>
+                        </div>
+                      </div>
+
+                      <div class="card-header p-1 flex-column text-center" style="flex: auto">
+                        <img src="{{ row.file }}" style="height:100px;">
+                        <hr/>
+                        <h4 class="a">{{ row.name }}</h4>
+                      </div>
+                  </div>
+                </div>
+                </ng-container>
+              <ng-template #loading>Loading Data ...</ng-template>
+              </div>
+            </form>
+            <div *ngIf="records">
+							<ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+								[collectionSize]="records.meta.pagination.total"
+								[pageSize]="records.meta.pagination.per_page"
+								[(page)]="records.meta.pagination.current_page"></ngb-pagination>
+						</div>
+          </div>
+          <ng-template #loading>Loading Data ...</ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

@@ -1,0 +1,291 @@
+<div style="min-height: calc(100vh - 75px);">
+	<app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+	<section id="basic-form-layouts">
+		<div class="row match-height">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-body">
+						<div class="px-3">
+							<ng-container *ngIf="buildForm; else norecord">
+								<form class="form form-horizontal striped-rows" [formGroup]="courseForm"
+									(submit)="onSubmit()">
+
+									<div class="form-body">
+										<h4 class="form-section">
+											<i class="ft-user"></i>
+											{{ title }}
+										</h4>
+
+										<div class="form-group">
+											<div class="row">
+											<label class="col-md-3 pt-1" for="name">
+												Course Name
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="text" formControlName="name" id="name" class="form-control" />
+												<div *ngIf="courseForm.get('name').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="courseForm.get('name').errors.required">
+														Name is required!
+													</div>
+													<div *ngIf="courseForm.get('name').errors.minlength">
+														Name must be atleast 3 characters!
+													</div>
+													<div *ngIf="courseForm.get('name').errors.maxlength">
+														Name can have maximum 50 characters!
+													</div>
+													<div *ngIf="courseForm.get('name').errors.pattern">
+														Name must be letters, numbers or dashes!
+													</div>
+												</div>
+												<div *ngIf="error_messages.name" class="invalid-feedback">
+													{{ error_messages.name }}
+												</div>
+											</div>
+										</div>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+												
+													<label for="group" class="col-md-3">
+														Group
+														<span style="color:red">*</span>
+													</label>
+	
+													<div class="col-md-9">
+													<ng-container *ngIf="(groupData | async) as groups">
+														<ng-multiselect-dropdown formControlName="group_id"
+															[placeholder]="'Select group'" [settings]="dropdownSettings"
+															[data]="groups.data" [disabled]="isDisabled" >
+														</ng-multiselect-dropdown>
+													</ng-container>
+													<div *ngIf="courseForm.get('group_id').errors && submitted"
+														class="invalid-feedback">
+														<div *ngIf="courseForm.get('group_id').errors.required">
+															Group is required!
+														</div>
+													</div>
+													<div *ngIf="error_messages.group_id" class="invalid-feedback">
+														{{ error_messages.group_id }}
+													</div>
+												</div>
+												
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+												<label class="col-md-3 pt-1" for="description">
+													Course Description
+													<span style="color:red;">*</span>
+												</label>
+												<div class="col-md-9">
+													
+													<!--<textarea type="text" formControlName="description" id="description" class="form-control"
+													></textarea>-->
+
+													<ckeditor formControlName="description"  [editor]="Editor"  data="" style="height:800px;"></ckeditor>
+
+													<div *ngIf="courseForm.get('description').errors && submitted"
+														class="invalid-feedback">
+														<div *ngIf="courseForm.get('description').errors.required">
+															Course Description is required!
+														</div>
+														<div *ngIf="courseForm.get('description').errors.minlength">
+															Course Description must be atleast 3 characters!
+														</div>
+														<div *ngIf="courseForm.get('description').errors.maxlength">
+															Course Description can have maximum 50 characters!
+														</div>
+														<div *ngIf="courseForm.get('description').errors.pattern">
+															Course Description must be letters, numbers or dashes!
+														</div>
+													</div>
+													<div *ngIf="error_messages.description" class="invalid-feedback">
+														{{ error_messages.description }}
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+												<label class="col-md-3 pt-1" for="image">
+													Course Image
+												</label>
+												<div class="col-md-9">
+													<input type="file" formControlName="image" class="form-control" accept="image/x-png,image/gif,image/jpeg,image/jpg" id="image" (change)="imageChange($event.target.files)"/>
+													<br>
+													<span *ngIf="image_url">
+														<p>Previously Selected Media :   
+															<a href="{{ image_url }}" target="_blank">Click here</a>
+														</p>
+														
+													</span>
+													<div *ngIf="error_messages.image" class="invalid-feedback">
+														{{ error_messages.image }}
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+												<label class="col-md-3 pt-1" for="sort_order">
+													Sort Order
+													<span style="color:red;">*</span>
+												</label>
+												<div class="col-md-9">
+													<input type="number" formControlName="sort_order" id="sort_order" min="1" class="form-control">
+													<div *ngIf="courseForm.get('sort_order').errors && submitted"
+														class="invalid-feedback">
+														<div *ngIf="courseForm.get('sort_order').errors.required">
+															Sort Order is required!
+														</div>
+														<div *ngIf="courseForm.get('sort_order').errors.minlength">
+															Sort Order must be atleast 3 characters!
+														</div>
+														<div *ngIf="courseForm.get('sort_order').errors.maxlength">
+															Sort Order can have maximum 50 characters!
+														</div>
+														<div *ngIf="courseForm.get('sort_order').errors.pattern">
+															Sort Order must be numbers
+														</div>
+													</div>
+													<div *ngIf="error_messages.sort_order" class="invalid-feedback">
+														{{ error_messages.sort_order }}
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+												<label class="col-md-3 pt-1" for="start_date">
+													Start Date
+												</label>
+												<div class="input-group col-md-3">
+													<input class="form-control" placeholder="dd-mm-yyyy" formControlName="start_date" ngbDatepicker #start_date="ngbDatepicker"
+														 [minDate]="minDate">
+													<div class="input-group-addon" (click)="start_date.toggle()">
+															<i class="fa fa-calendar" style="cursor: pointer;"></i>
+													</div>
+													<!-- <input type="date" formControlName="start_date" id="start_date" class="form-control datepicker"> -->
+													<div *ngIf="courseForm.get('start_date').errors && submitted"
+														class="invalid-feedback">
+														<div *ngIf="courseForm.get('start_date').errors.required">
+															Start Date is required!
+														</div>
+														<div *ngIf="courseForm.get('start_date').errors.minlength">
+															Start Date must be atleast 3 characters!
+														</div>
+														<div *ngIf="courseForm.get('start_date').errors.maxlength">
+															Start Date can have maximum 50 characters!
+														</div>
+														<div *ngIf="courseForm.get('start_date').errors.pattern">
+															Start Date must be letters, numbers or dashes!
+														</div>
+													</div>
+													<div *ngIf="error_messages.start_date" class="invalid-feedback">
+														{{ error_messages.start_date }}
+													</div>
+												</div>
+												<label class="col-md-3 pt-1 text-center" for="end_date">
+													End Date
+												</label>
+												<div class="input-group col-md-3">
+													<input class="form-control" placeholder="dd-mm-yyyy" formControlName="end_date" ngbDatepicker #end_date="ngbDatepicker" [minDate]="minDate"
+														>
+													<div class="input-group-addon" (click)="end_date.toggle()">
+														<i class="fa fa-calendar" style="cursor: pointer;"></i>
+													</div>
+													<!-- <input type="date" formControlName="end_date" id="end_date" class="form-control"> -->
+													<div *ngIf="courseForm.get('end_date').errors && submitted" class="invalid-feedback">
+														<div *ngIf="courseForm.get('end_date').errors.required">
+															End Date is required!
+														</div>
+														<div *ngIf="courseForm.get('end_date').errors.minlength">
+															End Date must be atleast 3 characters!
+														</div>
+														<div *ngIf="courseForm.get('end_date').errors.maxlength">
+															End Date can have maximum 50 characters!
+														</div>
+														<div *ngIf="courseForm.get('end_date').errors.pattern">
+															End Date must be letters, numbers or dashes!
+														</div>
+													</div>
+													<div *ngIf="error_messages.end_date" class="invalid-feedback">
+														{{ error_messages.end_date }}
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<!-- <div class="form-group">
+											<div class="row">
+												<label class="col-md-3 pt-1" for="end_date">
+													End Date
+												</label>
+												<div class="input-group col-md-3">
+													<input class="form-control" placeholder="dd-mm-yyyy" formControlName="end_date"
+														ngbDatepicker  [minDate]="minDate"
+														[ngClass]="{ 'is-invalid': submitted && courseForm.get('end_date').errors }">
+													<div class="input-group-addon" (click)="start_date.toggle()">
+														<i class="fa fa-calendar" style="cursor: pointer;"></i>
+													</div>
+													
+													<div *ngIf="courseForm.get('end_date').errors && submitted"
+														class="invalid-feedback">
+														<div *ngIf="courseForm.get('end_date').errors.required">
+															End Date is required!
+														</div>
+														<div *ngIf="courseForm.get('end_date').errors.minlength">
+															End Date must be atleast 3 characters!
+														</div>
+														<div *ngIf="courseForm.get('end_date').errors.maxlength">
+															End Date can have maximum 50 characters!
+														</div>
+														<div *ngIf="courseForm.get('end_date').errors.pattern">
+															End Date must be letters, numbers or dashes!
+														</div>
+													</div>
+													<div *ngIf="error_messages.end_date" class="invalid-feedback">
+														{{ error_messages.end_date }}
+													</div>
+												</div>
+											</div>
+										</div> -->
+
+										<div class="form-actions center">
+											<div class="col-md-3"></div>
+											<div class="col-md-9">
+												<a [routerLink]="['/course']" [queryParams]="{campaign_id: campaign_id}" class="btn btn-raised btn-orange mr-1">
+													<i class="ft-x"></i>
+													Cancel
+												</a>
+												<button type="submit" class="btn btn-raised btn-purple">
+													<i class="fa fa-check-square-o"></i>
+													Save
+												</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</ng-container>
+							<ng-template #norecord>
+								<div class="card col-12">
+									<div class="card-body mt-3">
+										<p>Loading Data...</p>
+									</div>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+

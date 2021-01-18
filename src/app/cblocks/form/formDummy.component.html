@@ -1,0 +1,129 @@
+<app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+
+<section id="basic-form-layouts">
+  <div class="row match-height">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="px-3">
+            <ng-container *ngIf="buildForm; else norecord">
+              <form class="form form-horizontal striped-rows" [formGroup]="moduleForm"
+                (ngSubmit)="onSubmit()">
+                <div *ngFor="let row of errors; let i=index">
+                  <p style="color:red;">{{ row }}</p>
+                </div>
+
+                <div class="form-body">
+                  <h4 class="form-section">
+                    <i class="ft-user"></i>
+                    {{ title }}
+                  </h4>
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="module_name">Module Name</label>
+                    <div class="col-md-9">
+                      <input type="text" id="module_name" formControlName="name" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && formObj.name.errors }" />
+                      <div *ngIf="submitted && formObj.name.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.name.errors.required">Module Name is required!</div>
+                      </div>
+                      <div *ngIf="editFlag == true">
+                        <input type="hidden" formControlName="id">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="company_id">Company Name</label>
+                    <div class="col-md-9">
+
+                      <ng-container *ngIf="(companies | async) as companies">
+                        <ng-multiselect-dropdown formControlName="company_id" [placeholder]="
+                  													'Select Company'
+                  												" [data]="companies.data" [settings]="dropdownSettingsCompany"></ng-multiselect-dropdown>
+                      </ng-container>
+
+                      <div *ngIf="submitted && formObj.company_id.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.company_id.errors.required">Please Select Company!</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="language_id">Language Name</label>
+                    <div class="col-md-9">
+
+                      <ng-container *ngIf="(languages | async) as languages">
+                        <ng-multiselect-dropdown formControlName="language_id" [placeholder]="
+                          'Select Languages'
+												" [data]="languages.data" [settings]="dropdownSettings" (onSelect)="setDefaultLanguages($event)">
+                        </ng-multiselect-dropdown>
+                      </ng-container>
+
+                      <div *ngIf="submitted && formObj.language_id.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.language_id.errors.required">Please Select atleast one language!</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="default_id">Default Language</label>
+                    <div class="col-md-9">
+
+                      <ng-container *ngIf="default_language">
+                        <ng-multiselect-dropdown formControlName="default_id" [placeholder]="
+                  													'Select Default Language'
+                  												" [data]="default_language" [settings]="dropdownSettingsLanguage">
+                        </ng-multiselect-dropdown>
+                      </ng-container>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="type">Type</label>
+                    <div class="col-md-9">
+                      <ng-multiselect-dropdown formControlName="type" [placeholder]="
+													'Select Type'
+												" [data]="types" [settings]="dropdownSettingsType"></ng-multiselect-dropdown>
+
+                      <div *ngIf="submitted && formObj.type.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.type.errors.required">Please Select Type!</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" class="col-md-3 label-control">
+                      Is Active ?
+                    </label>
+                    <div class="col-md-9">
+                      <div class="input-group">
+                        <ui-switch defaultBgColor='#ff4d4d' labelOn="Yes" labelOff="No" formControlName="is_active">
+                        </ui-switch>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions center">
+                  <div class="col-md-3"></div>
+                  <div class="col-md-9">
+                    <button type="button" [routerLink]="['/cblocks']" [queryParams]="{campaign_id: campaign_id}" class="btn btn-raised btn-orange mr-1">
+                      <i class="ft-x"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-raised btn-primary">
+                      <i class="fa fa-check-square-o"></i> Save
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+              <ng-template>
+                <p>Data Loading...</p>
+              </ng-template>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,38 @@
+.fupload-main-contianer
+{
+    width:50%;border: dotted 2px #ffc107;padding: 18px;border-radius: 5px;background-color:#fffcf7 ;
+}
+
+.fupload
+{
+width:50%;float:left;padding-top:5px;
+}
+
+.fbtn-upload
+{
+    width:50%;float:left;
+}
+
+.text-csv
+{
+    font-size: 13px;
+}
+
+
+@media only screen and (max-width: 600px)
+ {
+    
+    .fupload-main-contianer{width:100% !important;}
+    .fupload{width:100%;}
+    .fbtn-upload {width:100%;}
+
+  }
+
+
+  @media only screen and (max-width: 1024px)
+ {
+    
+    .fupload-main-contianer{width:80% !important;}
+    
+
+  }

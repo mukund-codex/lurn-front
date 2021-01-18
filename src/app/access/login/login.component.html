@@ -1,0 +1,87 @@
+<!--Login Page Starts-->
+<section id="login">
+    <img class="login-top-vector" src="assets/img/login-top-vector.png">
+    <div class="container-fluid">
+        <div class="row full-height-vh">
+            <div class="col-12 align-items-center justify-content-center">
+                <div class="card login-box border-0">
+                    <div class="overlay"></div>
+                        <div class="row" style="z-index: 999;">
+                            <div class="col-md-7 text-center hidden-sm">
+                                <img alt="element 06" style="max-width: 100%;" src="assets/img/login-vector.png">
+                            </div>
+                            <div class="col-md-5 form-box">
+                                <div class="card-img-bottom text-center">
+                                    <img alt="element 06" class="mb-1" style="padding-top:5px" src="assets/img/portrait/avatars/avatar-08.png" width="160">
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-block">
+                                
+                                        <div *ngIf="isLoginError" class="red-text center error-message">
+                                            <div class="text-center" style="color:red"> <i class="fa fa-exclamation-triangle"></i> Incorrect username or
+                                                password. </div>
+                                        </div>
+                                
+                                        <form novalidate="" (ngSubmit)="f.form.valid && OnSubmit(inputUsername.value,inputPass.value)" #f="ngForm">
+                                
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <label for="inputUsername">Username</label>
+                                                    <input type="text" class="form-control" name="inputUsername" placeholder="Input your username"
+                                                        autocomplete="off" ngModel #inputUsername="ngModel"
+                                                        [ngClass]="{ 'is-invalid': f.submitted && inputUsername.invalid }" required />
+                                                    <div *ngIf="f.submitted && inputUsername.invalid" class="invalid-feedback">
+                                                        <div *ngIf="inputUsername.errors.required">Username is required.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <label for="inputPass">Password</label>
+                                                    <div class="input-group">
+                                                        <input [type]="show ? 'text' : 'password'" class="form-control" name="inputPass"
+                                                            placeholder="Input your password" autocomplete="off" ngModel #inputPass="ngModel"
+                                                            [ngClass]="{ 'is-invalid': f.submitted && inputPass.invalid }" required />
+                                                        <div class="input-group-addon">
+                                                            <i [class]="show ? 'ft-eye' : 'ft-eye-off'" (click)="togglePassword()"></i>
+                                                        </div>
+                                                    </div>
+                                
+                                
+                                                    <div *ngIf="f.submitted && inputPass.invalid" class="invalid-feedback">
+                                                        <div *ngIf="inputPass.errors.required">Password is required.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <label class="mb-2 mr-sm-2 mb-sm-0">
+                                                        <input type="checkbox" checked id="remember-chk">
+                                                        <label for="remember-chk">Remember Me</label>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <button type="submit" class="btn btn-purple btn-block btn-raised">Sign In</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                   
+                    <!-- <div class="card-footer"> -->
+                        <!-- <div class="text-center"><a (click)="onForgotPassword()">Recover Password</a></div> -->
+                    <!-- </div> -->
+                    <img class="login-bottom-vector" src="assets/img/login-bottom-vector.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Login Page Ends-->

@@ -1,0 +1,19 @@
+<div class="col-xl-10 col-lg-10 col-md-10 col-sm-6 topbar-container" style="margin-top:5px;">
+  <ng-container *ngIf="(campaigns) as resultData">
+    <div class="row">
+      <div class="col-xl-4 col-lg-4 col-sm-12">
+        <ng-multiselect-dropdown
+          [(ngModel)]="selectedCampaign" [placeholder]=" 'Select Campaign'" [settings]="dropdownSettingsCampaign"
+          [data]="resultData.data" (onSelect)="changeCampaign.emit($event)">
+        </ng-multiselect-dropdown>
+      </div>
+      <div class="col-xl-8 col-lg-8 col-sm-12">
+        <label class="float-left">Campaign Code : {{ campaign_code }}&nbsp;&nbsp;</label>
+        <i class="ft-copy float-left" (click)="copyInputMessage(campaign_code, $event)" title="Copy Code"></i>
+        <span style="color:green; margin-left: 20px; display: none;" class="row float-left">Copied Successfully!</span>
+
+      </div>
+    </div>
+    
+</ng-container>
+</div>

@@ -1,0 +1,213 @@
+<section id="basic-form-layouts">
+    <div class="row match-height">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="px-3">
+                        <ng-container *ngIf="buildForm; else norecord">
+                            <form class="form form-horizontal striped-rows" [formGroup]="inputForm"
+                                (ngSubmit)="onSubmit()">
+
+                                <div class="form-body">
+                                    <h4 class="form-section">
+                                        <i class="ft-user"></i>
+                                        {{ title }}
+                                    </h4>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 label-control" for="company_id">Company Name</label>
+                                        <div class="col-md-9">
+
+                                            <ng-container *ngIf="(companies | async) as companies">
+                                                <ng-multiselect-dropdown formControlName="company_id"
+                                                    (onSelect)="getcampaign($event)" [placeholder]="'Select Company'"
+                                                    [data]="companies.data" [settings]="dropdownSettings">
+                                                </ng-multiselect-dropdown>
+                                            </ng-container>
+
+                                            <div *ngIf="submitted && formObj.company_id.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="formObj.company_id.errors.required">Company Name is
+                                                    required!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 label-control" for="campaign_id">Campaign Name</label>
+                                        <div class="col-md-9">
+                                            <ng-container *ngIf="(campaignData | async) as resultData">
+                                                <ng-multiselect-dropdown formControlName="campaign_id"
+                                                    (onSelect)="getCamps($event)" [placeholder]="'Select Campaign'"
+                                                    [data]="resultData.data" [settings]="dropdownSettings">
+                                                </ng-multiselect-dropdown>
+                                            </ng-container>
+
+                                            <div *ngIf="submitted && formObj.campaign_id.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="formObj.campaign_id.errors.required">Campaign Name is
+                                                    required!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 label-control" for="camp_id">Camp Name</label>
+                                        <div class="col-md-9">
+                                            <ng-container *ngIf="(campsData | async) as resultData; let k=index">
+                                                <ng-multiselect-dropdown formControlName="camp_id"
+                                                    (onSelect)="getModules($event, resultData.data)"
+                                                    [placeholder]="'Select Camp'" [data]="resultData.data"
+                                                    [settings]="dropdownSettings">
+                                                </ng-multiselect-dropdown>
+                                            </ng-container>
+
+                                            <div *ngIf="submitted && formObj.camp_id.errors" class="invalid-feedback">
+                                                <div *ngIf="formObj.camp_id.errors.required">Camp Name is
+                                                    required!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 label-control" for="module_id">Module Name</label>
+                                        <div class="col-md-9">
+                                            <ng-container *ngIf="(modulesData | async) as resultData">
+                                                <ng-multiselect-dropdown formControlName="module_id"
+                                                    (onSelect)="getMasterfiles($event)" [placeholder]="'Select Module'"
+                                                    [data]="resultData.data" [settings]="dropdownSettings">
+                                                </ng-multiselect-dropdown>
+                                            </ng-container>
+
+                                            <div *ngIf="submitted && formObj.module_id.errors" class="invalid-feedback">
+                                                <div *ngIf="formObj.module_id.errors.required">Module Name is
+                                                    required!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 label-control" for="masterfile_id">MasterFile Name</label>
+                                        <div class="col-md-9">
+                                            <ng-container *ngIf="(masterfilesData | async) as resultData">
+                                                <ng-multiselect-dropdown formControlName="masterfile_id"
+                                                    (onSelect)="getInputs($event)" [placeholder]="'Select Master File'"
+                                                    [data]="resultData.data" [settings]="dropdownSettings">
+                                                </ng-multiselect-dropdown>
+                                            </ng-container>
+
+                                            <div *ngIf="submitted && formObj.masterfile_id.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="formObj.masterfile_id.errors.required">Master file Name is
+                                                    required!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 label-control" for="masterfile_id">Mapping</label>
+                                        <div class="col-md-9">
+                                            <ng-container *ngIf="inputsData as resultData">
+                                                <div *ngIf="formsData as forms">
+                                                    <table class="table table-bordered table-condensed">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Input</th>
+                                                                <th class='hidden'>Input type</th>
+                                                                <th>Type</th>
+                                                                <th>Form Field</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody formArrayName="form_inputs">
+                                                            <tr
+                                                                *ngFor="let result of resultData;let item of inputForm.get('form_inputs').controls; let j = index">
+                                                                <ng-container [formGroupName]="j">
+                                                                    <td> {{ result.name }} <input type="hidden"
+                                                                        formControlName="input_id"></td>
+                                                                    <td class="hidden"> {{ result.type }} <input type="hidden"
+                                                                        formControlName="input_type"></td>
+                                                                    <td>
+                                                                        <select class="form-control" id="type"
+                                                                            formControlName="type">
+                                                                            <option value="static">Static</option>
+                                                                            <option value="form">Form</option>
+                                                                        </select>
+                                                                        <!-- <div *ngIf="submitted && inputForm.get('form_inputs').type.errors"
+                                                                            class="invalid-feedback">
+                                                                            <div
+                                                                                *ngIf="inputForm.get('form_inputs').type.errors.required">
+                                                                                Please Enter Type!
+                                                                            </div>
+                                                                        </div> -->
+                                                                    </td>
+                                                                    <td>
+                                                                        <div *ngIf="static[j]">
+                                                                            <div *ngIf="staticTxt[j]">
+                                                                                <input class="form-control"
+                                                                                    formControlName="static_text">
+                                                                                <!-- <div *ngIf="submitted && item.input_type.errors"
+                                                                                    class="invalid-feedback">
+                                                                                    <div
+                                                                                        *ngIf="item.input_type.errors.required">
+                                                                                        Please Enter Type!
+                                                                                    </div>
+                                                                                </div> -->
+                                                                            </div>
+                                                                            <div *ngIf="staticFile[j]">
+                                                                                <input type="file" class="form-control"
+                                                                                    formControlName="static_file">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div *ngIf="form[j]">
+                                                                            <ng-multiselect-dropdown
+                                                                                [placeholder]="'Select Form Field'"
+                                                                                [data]="forms"
+                                                                                formControlName="form_field"
+                                                                                [settings]="dropdownSettingsForm">
+                                                                            </ng-multiselect-dropdown>
+                                                                        </div>
+                                                                    </td>
+                                                                </ng-container>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </ng-container>
+
+                                            <div *ngIf="submitted && formObj.masterfile_id.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="formObj.masterfile_id.errors.required">Template Name is
+                                                    required!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions center">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-9">
+                                        <button type="button" [routerLink]="['/masterfile-mapping']"
+                                            class="btn btn-raised btn-orange mr-1">
+                                            <i class="ft-x"></i> Cancel
+                                        </button>
+                                        <button type="submit" class="btn btn-raised btn-primary">
+                                            <i class="fa fa-check-square-o"></i>
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </ng-container>
+
+                        <ng-template #norecord>
+                            <p>Data Loading...</p>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

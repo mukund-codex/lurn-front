@@ -1,0 +1,77 @@
+<app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+<section id="simple-table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-shadow-0">
+        <div class="card-header m-top-bottom-10">
+          <h4 class="card-title module-title">Doctor Form Builder</h4>
+
+          <div *ngIf="(formbuildersData | async) as formBuilders">
+            <div *ngIf="!formBuilders.data.length">
+              <app-actionbtns [addRedirect]="'/module-formbuilders/add'" [showExport]="false" [showImport]="false">
+              </app-actionbtns>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="card-body" style="margin-top:60px;">
+          
+          <p *ngIf="message">{{ message.text }}</p>
+          <div class="card-block">
+            <div class="table-responsive">
+              <form name="searchForm" #searchForm="ngForm" class="table-responsive">
+                <table class="table table-bordered table-condensed">
+                  <thead>
+                    <tr>
+                      <th>Action</th>
+                      <th>Sr. No</th>
+                      <th>Module Name</th>
+                      <th>Form Builder Name</th>
+                      <th>Form Data</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <ng-container *ngIf="(formbuildersData | async) as formBuilders; else loading">
+                      <tr *ngIf="!formBuilders.data.length">
+                        <td [attr.colSpan]="7">No Records Found!</td>
+                      </tr>
+                      <tr *ngFor="let row of formBuilders.data; let i=index">
+                        <td>
+                          <a class="ng2-smart-action ng2-smart-action-edit-edit"
+                            [routerLink]="['/module-formbuilder/edit/' + row.id]"
+                            [queryParams]="{campaign_id: campaign_id, module_id: module_id}">
+														<i class="ft-edit-2 info font-medium-1 mr-2"></i>
+													</a>
+                        </td>
+                        <th scope="row">
+                          {{ ((formBuilders.meta.pagination.current_page - 1) * formBuilders.meta.pagination.per_page)
+                          + i +
+                          1 }}
+                        </th>
+                        <td>{{ row.module.name }}</td>
+                        <td>{{ row.name }}</td>
+                        <td>
+                          <ng-container *ngFor="let formRow of row.form; let j=index">
+                            {{ formRow.label }}
+                            <span *ngIf="j!=row.form.length-1">,</span>
+                          </ng-container>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </form>
+            </div>
+            <div *ngIf="(formbuildersData | async) as formBuilders">
+              <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                [collectionSize]="formBuilders.meta.pagination.total" [pageSize]="formBuilders.meta.pagination.per_page"
+                [(page)]="formBuilders.meta.pagination.current_page"></ngb-pagination>
+            </div>
+          </div>
+          <ng-template #loading>Loading Form Builder Data</ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

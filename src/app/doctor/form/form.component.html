@@ -1,0 +1,186 @@
+<div style="min-height: calc(100vh - 75px);">
+  <app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+  <section id="basic-form-layouts">
+    <div class="row match-height">
+      <div class="col-md-12">
+        <ng-container *ngIf="buildForm; else norecord">
+          <div class="card">
+            <div class="card-body">
+              <div class="px-3">
+                <form class="form form-horizontal striped-rows" [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
+
+                  <div class="form-body">
+                    <h4 class="form-section">
+                      <i class="ft-user"></i>
+                      {{ title }}
+                    </h4>
+
+                    <ng-container *ngIf="fieldsData as fields; else norecord">
+
+                      <div class="form-group" *ngFor="let row of fields; let i=index">
+                        <div class="row" *ngIf="row.type === 'text' || row.type === 'number'">
+                          <label class="col-md-3 pt-1" for="name">{{ row.label }}
+                            <span *ngIf="row.required" style="color:red;">*</span>
+                          </label>
+                          <div class="col-md-9">
+                            <input type="text" formControlName="{{ row.name }}" [readonly]="!row.is_editable && editFlag" class="form-control"
+                              placeholder="{{ row.placeholder }}" maxlength="{{ row.maxlength }}"/>
+                            <div *ngIf="submitted && doctorForm.get(row.name).hasError('required')" class="invalid-feedback">
+                              {{ row.label }} is required!
+                            </div>
+                            <div *ngIf="submitted && doctorForm.get(row.name).hasError('minlength')" class="invalid-feedback">
+                              {{ row.label }} should have minimum {{ row.minlength }} characters!
+                            </div>
+                            <div *ngIf="submitted && doctorForm.get(row.name).hasError('pattern')" class="invalid-feedback">
+                              {{ row.label }} is Invalid!
+                            </div>
+                            <div *ngIf="error_messages[row.name]" class="invalid-feedback">
+                              {{ error_messages[row.name] }}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row" *ngIf="row.type === 'date'">
+                          <label class="col-md-3 pt-1" for="name">{{ row.label }}
+                            <span *ngIf="row.required" style="color:red;">*</span>
+                          </label>
+                          <div class="col-md-9">
+                            <div class="input-group">
+                              <input class="form-control" placeholder="dd-mm-yyyy" formControlName="{{ row.name }}"
+                                ngbDatepicker #start_date="ngbDatepicker">
+                              <div class="input-group-addon" (click)="start_date.toggle()">
+                                <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row" *ngIf="row.type === 'file'">
+                          <label class="col-md-3 pt-1" for="name">{{ row.label }}
+                            <span *ngIf="row.required" style="color:red;">*</span>
+                          </label>
+                          <div class="col-md-9">
+                            <input type="file" formControlName="{{ row.name }}" class="form-control"
+                              placeholder="{{ row.placeholder }}" (change)="fileChange($event.target.files, row.name)"/>
+                              <span *ngIf="doctor_id && filesSelected[row.name]">
+                                <p>Previously Selected Logo :</p>
+                                <img src="{{ filesSelected[row.name] }}" style="width:150px;" />
+                              </span>
+                              <div *ngIf="submitted && doctorForm.get(row.name).hasError('required')" class="invalid-feedback">
+                                {{ row.label }} is required!
+                              </div>
+                              <div *ngIf="error_messages[row.name]" class="invalid-feedback">
+                                {{ error_messages[row.name] }}
+                              </div>
+                          </div>
+                        </div>
+
+                        <div class="row" *ngIf="row.type === 'textarea'">
+                          <label class="col-md-3 pt-1" for="name">{{ row.label }}
+                            <span *ngIf="row.required" style="color:red;">*</span>
+                          </label>
+                          <div class="col-md-9">
+                            <textarea type="file" formControlName="{{ row.name }}" class="form-control"
+                              placeholder="{{ row.placeholder }}"></textarea>
+                              <div *ngIf="submitted && doctorForm.get(row.name).hasError('required')"
+                              class="invalid-feedback">
+                                {{ row.label }} is required!
+                            </div>
+                            <div *ngIf="error_messages[row.name]" class="invalid-feedback">
+                              {{ error_messages[row.name] }}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row" *ngIf="row.type === 'radio-group'">
+                          <label class="col-md-3 pt-1" for="name">{{ row.label }}
+                            <span *ngIf="row.required" style="color:red;">*</span>
+                          </label>
+                          <div class="col-md-9">
+                            <div *ngFor="let option of row.values" class="d-inline p-2">
+                              <input type="radio" id="{{ option.value }}" formControlName="{{ row.name }}" value="{{ option.value }}">
+                              <label for="male">{{ option.label }}</label>
+                            </div>
+                            <div *ngIf="submitted && doctorForm.get(row.name).hasError('required')"
+                              class="invalid-feedback">
+                                {{ row.label }} is required!
+                            </div>
+                            <div *ngIf="error_messages[row.name]" class="invalid-feedback">
+                              {{ error_messages[row.name] }}
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="row" *ngIf="row.type === 'select'">
+                          <label class="col-md-3 pt-1" for="name">{{ row.label }}
+                            <span *ngIf="row.required" style="color:red;">*</span>
+                          </label>
+                          <div class="col-md-9">
+                            <select class="form-control" id="type" formControlName="{{ row.name }}">
+                              <option *ngFor="let option of row.values" value="{{ option.value }}">{{ option.label}}
+                              </option>
+                            </select>
+                            <div *ngIf="submitted && doctorForm.get(row.name).hasError('required')"
+                              class="invalid-feedback">
+                                {{ row.label }} is required!
+                            </div>
+                            <div *ngIf="error_messages[row.name]" class="invalid-feedback">
+                              {{ error_messages[row.name] }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <h4 class="form-section">
+                      <i class="ft-user"></i>User Details
+                    </h4>
+
+
+                    <div class="form-group">
+                      <div class="row">
+                        <label class="col-md-3 pt-1" for="user_id">
+                          User<span style="color:red;">*</span>
+                        </label>
+                        <div class="col-md-9">
+                          <ng-multiselect-dropdown formControlName="user_id" [placeholder]="'Select User'"
+                            [settings]="dropdownSettings" [data]="users"
+                            (click)="elementTouched(doctorForm.get('user_id'))"></ng-multiselect-dropdown>
+                          <div *ngIf="doctorForm.get('user_id').errors && submitted"
+                            class="invalid-feedback">
+                            <div *ngIf="doctorForm.get('user_id').errors.required">
+                              User is required!
+                            </div>
+                            <div *ngIf="error_messages['user_id']" class="invalid-feedback">
+                              {{ error_messages['user_id'] }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-actions center">
+                    <button type="button" [routerLink]="['/doctor']" [queryParams]="{campaign_id: campaign_id}" class="btn btn-raised btn-orange mr-1">
+                      <i class="ft-x"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-raised btn-primary">
+                      <i class="fa fa-check-square-o"></i>
+                      Save
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #norecord>
+          <p>Data Loading...</p>
+        </ng-template>
+      </div>
+    </div>
+  </section>
+</div>

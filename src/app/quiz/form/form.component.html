@@ -1,0 +1,448 @@
+<section id="basic-form-layouts">
+	<div class="row match-height">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="px-3">
+						<ng-container *ngIf="buildForm; else norecord">
+							<form class="form form-horizontal striped-rows" [formGroup]="quizForm"
+								(submit)="onSubmit()" enctype="multipart/form-data">
+								<div class="form-body">
+									<h4 class="form-section">
+										<i class="ft-user"></i>
+										{{ title }}
+									</h4>
+
+									<div class="form-group">
+										<div class="row">
+											<label for="section" class="col-md-3">
+												Section
+												<span style="color:red">*</span>
+											</label>
+											
+											<div class="col-md-9">
+												<ng-container *ngIf="(sectionData | async) as section">
+													<ng-multiselect-dropdown formControlName="section"
+														[placeholder]="'Select Section'" [settings]="dropdownSettings"
+														[data]="section.data">
+													</ng-multiselect-dropdown>
+												</ng-container>
+												<div *ngIf="quizForm.get('section').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('section').errors.required">
+														Section is required!
+													</div>
+												</div>
+												<div *ngIf="error_messages.section" class="invalid-feedback">
+													{{ error_messages.section }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="title">
+												Title
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="text" formControlName="title" maxlength="50"
+													class="form-control" id="title" autocomplete="off" />
+												<div *ngIf="submitted && quizForm.get('title').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('title').errors.required">
+														 Title is required!
+													</div>
+													<div *ngIf="quizForm.get('title').errors.pattern">
+														 Title format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('title').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('title').errors.maxlength">
+														Title too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.title" class="invalid-feedback">
+													{{ error_messages.title }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="version">
+												Version
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="number" formControlName="version" min="1" max="10" maxlength="5" class="form-control" id="version"/>
+												<div *ngIf="submitted && quizForm.get('version').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('version').errors.required">
+														 Version is required!
+													</div>
+													<div *ngIf="quizForm.get('version').errors.pattern">
+														Version format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('version').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('version').errors.maxlength">
+														Version too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.version" class="invalid-feedback">
+													{{ error_messages.version }}
+												</div>
+											</div>											
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="icon">
+												Icon
+											</label>
+											<div class="col-md-9">
+												<input type="file" formControlName="icon" class="form-control" accept="image/x-png,image/gif,image/jpeg,image/jpg" id="icon" (change)="iconChange($event.target.files)"/>
+												<br>
+												<span *ngIf="previouslySelectedIcon">
+													<p>Previously Selected Media :   
+														<a href="{{ previouslySelectedIcon }}" target="_blank">Click here</a>
+													</p>
+													
+												</span>
+												<div *ngIf="error_messages.image" class="invalid-feedback">
+													{{ error_messages.image }}
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="description">
+												Description
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<!--<input type="text" formControlName="description" 
+													class="form-control" id="description" autocomplete="off" />-->
+												
+													<ckeditor formControlName="description"  [editor]="Editor"  data=""></ckeditor>
+
+													
+													<div *ngIf="submitted && quizForm.get('description').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('description').errors.required">
+														Description is required!
+													</div>
+													<div *ngIf="quizForm.get('description').errors.pattern">
+														Description format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('description').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('description').errors.maxlength">
+														Description too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.description" class="invalid-feedback">
+													{{ error_messages.description }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="sort_order">
+												Sort Order
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="number" formControlName="sort_order" 
+													class="form-control" id="sort_order" min="1" max="100" autocomplete="off" />
+													
+													<div *ngIf="submitted && quizForm.get('sort_order').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('sort_order').errors.required">
+														Sort Order is required!
+													</div>
+													<div *ngIf="quizForm.get('sort_order').errors.pattern">
+														Sort Order format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('sort_order').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('sort_order').errors.maxlength">
+														Sort Order too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.sort_order" class="invalid-feedback">
+													{{ error_messages.sort_order }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="start_date">
+												Start Date
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="date" formControlName="start_date" class="form-control" id="start_date" />
+												<div *ngIf="submitted && quizForm.get('start_date').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('start_date').errors.required">
+														Start Date is required!
+													</div>
+													<div *ngIf="quizForm.get('start_date').errors.pattern">
+														Start Date format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('start_date').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('start_date').errors.maxlength">
+														Start Date too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.start_date" class="invalid-feedback">
+													{{ error_messages.start_date }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="end_date">
+												End Date
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="date" formControlName="end_date" class="form-control" id="end_date" />
+												<div *ngIf="submitted && quizForm.get('end_date').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('end_date').errors.required">
+														End Date is required!
+													</div>
+													<div *ngIf="quizForm.get('end_date').errors.pattern">
+														End Date format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('end_date').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('end_date').errors.maxlength">
+														End Date too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.end_date" class="invalid-feedback">
+													{{ error_messages.end_date }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="time_limit">
+												Time Limit
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<select class="form-control" formControlName="time_limit" id="time_limit">
+													<option value="true">True</option>
+													<option value="false">False</option>
+												</select>
+												<div *ngIf="submitted && quizForm.get('time_limit').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('time_limit').errors.required">
+														Time Limit is required!
+													</div>
+													<div *ngIf="quizForm.get('time_limit').errors.pattern">
+														Time Limit format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('time_limit').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('time_limit').errors.maxlength">
+														Time Limit too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.time_limit" class="invalid-feedback">
+													{{ error_messages.time_limit }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group" *ngIf="is_show_duration">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="duration">
+												Duration (In Seconds)
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="number" formControlName="duration" class="form-control" max="864000" id="duration" />
+												<div *ngIf="submitted && quizForm.get('duration').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('duration').errors.required">
+														Duration is required!
+													</div>
+													<div *ngIf="quizForm.get('duration').errors.pattern">
+														Duration format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('duration').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('duration').errors.maxlength">
+														Duration too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.duration" class="invalid-feedback">
+													{{ error_messages.duration }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="passing_marks">
+												Passing Marks
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="number" formControlName="passing_marks" min="0" max="1000" class="form-control" id="passing_marks" />
+												<div *ngIf="submitted && quizForm.get('passing_marks').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('passing_marks').errors.required">
+														Passing Marks is required!
+													</div>
+													<div *ngIf="quizForm.get('passing_marks').errors.pattern">
+														Passing Marks format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('passing_marks').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('passing_marks').errors.maxlength">
+														Passing Marks too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.passing_marks" class="invalid-feedback">
+													{{ error_messages.passing_marks }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="reattempt">
+												Reattempt
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<select class="form-control" formControlName="reattempt" id="reattempt">
+													<option value="true">True</option>
+													<option value="false">False</option>
+												</select>
+												<div *ngIf="submitted && quizForm.get('reattempt').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('reattempt').errors.required">
+														Reattempt is required!
+													</div>
+													<div *ngIf="quizForm.get('reattempt').errors.pattern">
+														Reattempt format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('reattempt').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('reattempt').errors.maxlength">
+														Reattempt too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.reattempt" class="invalid-feedback">
+													{{ error_messages.reattempt }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group" *ngIf="is_show_reattempt">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="reattempt_count">
+												Reattempt Count
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="number" formControlName="reattempt_count" min="0" max="10" id="reattempt_count" class="form-control" />
+												<div *ngIf="submitted && quizForm.get('reattempt_count').errors"
+													class="invalid-feedback">
+													<div *ngIf="quizForm.get('reattempt_count').errors.required">
+														Reattempt Count is required!
+													</div>
+													<div *ngIf="quizForm.get('reattempt_count').errors.pattern">
+														Reattempt Count format is invalid!
+													</div>
+													<div *ngIf="quizForm.get('reattempt_count').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="quizForm.get('reattempt_count').errors.maxlength">
+														Reattempt Count too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.reattempt_count" class="invalid-feedback">
+													{{ error_messages.reattempt_count }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-actions center">
+										<div class="col-md-3"></div>
+										<div class="col-sm-9">
+											<a [routerLink]="['/quiz']" [queryParams]="{course_id:course_id,section_id:section_id,campaign_id: campaign_id}" class="btn btn-raised btn-orange mr-1">
+												<i class="ft-x"></i>
+												Cancel
+											</a>
+
+											<button type="submit" class="btn btn-raised btn-primary">
+												<i class="fa fa-check-square-o"></i>
+												Save
+											</button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</ng-container>
+
+						<ng-template #norecord>
+							<p>Loading Data...</p>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

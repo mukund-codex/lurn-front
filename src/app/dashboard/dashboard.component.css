@@ -1,0 +1,43 @@
+.dash-card{
+    border-radius: 10px;
+    width: 100%;
+}
+
+.border-blue{
+    border: 2px solid skyblue;
+}
+
+.border-red{
+    border: 2px solid #f3b3b3;
+}
+
+.border-peach{
+    border: 2px solid #fbcaa9;
+}
+
+.border-green{
+    border: 2px solid #a2e0a3;
+}
+
+.card h5.card-title{
+    font-size: xx-large !important;
+    color: darkslategray;
+}
+
+.helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+@media(max-width: 375px) {
+    .card-color-icon {
+      display: none;
+    }
+  }
+
+canvas{
+    width: 500px;
+    height:400px
+}
+

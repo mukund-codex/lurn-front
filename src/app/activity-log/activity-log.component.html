@@ -1,0 +1,57 @@
+<section id="simple-table">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card card-border-shadow-0">
+                <div class="card-header m-top-bottom-10 px-3">
+                    <h4 class="card-title">{{ title }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <form name="searchForm" #searchForm="ngForm" ngForm class="table-responsive">
+                            <div class="card-block" *ngIf="records">
+                                <div style="float:right;"><b class="tot-record">Total Records : {{ records.meta?.pagination?.total }}</b></div>
+                                <table class="table table-bordered table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr. No</th>
+                                            <th>Log Name</th>
+                                            <th>Causer</th>
+                                            <th>Subject</th>
+                                            <th>Properties</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container>
+                                            <tr *ngIf="!records.data.length">
+                                                <td [attr.colSpan]="3">No Records Found!</td>
+                                            </tr>
+                                            <tr *ngFor="let row of records.data; let i=index">
+                                                <th scope="row">
+                                                    {{ ((records.meta.pagination.current_page - 1) * records.meta.pagination.per_page) + i + 1 }}
+                                                </th>
+                                                <td>{{ row.log_name}}</td>
+                                                <td>{{ row.causer | json }}</td>
+                                                <td>{{ row.subject | json }}</td>
+                                                <td>{{ row.properties | json }}</td>
+                                                <td>{{ row.date | date:'medium'}}</td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>
+                                
+                                <div *ngIf="records">
+                                    <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                                        [collectionSize]="records.meta.pagination.total"
+                                        [pageSize]="records.meta.pagination.per_page"
+                                        [(page)]="records.meta.pagination.current_page"></ngb-pagination>
+                                </div>
+                            </div>
+                        </form>
+                        <ng-template #loading>Loading Language Data</ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

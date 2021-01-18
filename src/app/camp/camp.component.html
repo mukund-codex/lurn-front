@@ -1,0 +1,73 @@
+<section id="simple-table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-shadow-0">
+        <div class="card-header">
+          <h4 class="card-title">Camp</h4>
+          <app-actionbtns *ngIf="campData; else loading" [addRedirect]="'/camp/add'" [showExport]="false"
+            (download)="export()" [showImport]="false">
+          </app-actionbtns>
+        </div>
+
+        <div class="card-body">
+          <p *ngIf="message">{{ message.text }}</p>
+          <div class="card-block">
+            <div class="table-responsive">
+              <table class="table table-bordered table-condensed">
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th>Sr. No</th>
+                    <th>Camp Name</th>
+                    <th>Camp Start Date</th>
+                    <th>Camp End Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td><input type="text" (keyup)="search()" class="form-control" placeholder="Search By Name"
+                        [(ngModel)]="camp_name"></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+
+                  <ng-container *ngIf="(campData | async) as camps; else loading">
+                    <tr *ngIf="!camps.data.length">
+                      <td [attr.colSpan]="5">No Records Found!</td>
+                    </tr>
+                    <tr *ngFor="let row of camps.data; let i=index">
+                      <td>
+                        <a class="ng2-smart-action ng2-smart-action-edit-edit" (click)="edit(row.id)">
+                          <i class="ft-edit-2 info font-medium-1 mr-2"></i>
+                        </a>
+                        <a class="ng2-smart-action ng2-smart-action-delete-delete" (click)="delete(row.id)">
+                          <i class="ft-x danger font-medium-1 mr-2"></i>
+                        </a>
+                      </td>
+                      <th scope="row">
+                        {{ ((camps.meta.pagination.current_page - 1) * camps.meta.pagination.per_page)
+                        + i +
+                        1 }}
+                      </th>
+                      <td>{{ row.name }}</td>
+                      <td>{{ row.start_date }}</td>
+                      <td>{{ row.end_date }}</td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+            <div *ngIf="(campData | async) as camps">
+              <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                [collectionSize]="camps.meta.pagination.total" [pageSize]="camps.meta.pagination.per_page"
+                [(page)]="camps.meta.pagination.current_page"></ngb-pagination>
+            </div>
+          </div>
+          <ng-template #loading>Loading Camp Data</ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

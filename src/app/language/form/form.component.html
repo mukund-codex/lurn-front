@@ -1,0 +1,189 @@
+<div style="min-height: calc(100vh - 75px);">
+
+  <section id="basic-form-layouts">
+    <div class="row match-height">
+      <div class="col-md-12 p-0">
+        <div class="card">
+          <div class="card-body">
+     
+      <ng-container *ngIf="buildForm; else norecord">
+        <form class="form col-12 clearfix" [formGroup]="languageForm" (ngSubmit)="onSubmit()">
+
+          <div class="form-body">
+
+            <h4 class="form-section">
+              <i class="ft-user"></i>
+              {{ title }}
+            </h4>
+            
+             <div class="row">
+             <div class="col-md-6 col-sm-12 float-left padding-1">
+            <div class="card">
+              <div class="card-body">
+                <div class="px-3">
+                  <div class="form-body">
+                    <h4 class="form-section">
+                      <i class="ft-clipboard"></i>
+                      Basic Details
+                    </h4>
+
+                    <div class="row">
+                      <div class="form-group col-12 mb-2">
+                        <label for="language_name">
+                          Language Name
+                          <span style="color:red">*</span>
+                        </label>
+                        
+                        <input type="text" id="language_name" formControlName="name" class="form-control" maxlength="50"
+                          [ngClass]="{ 'is-invalid': submitted && languageForm.get('name').errors }" autocomplete="off" />
+                        <div *ngIf="submitted && languageForm.get('name').errors" class="invalid-feedback">
+                          <div *ngIf="languageForm.get('name').errors.required">Language Name is required!</div>
+                          <div *ngIf="languageForm.get('name').errors.minlength">Language Name must be minimum 3 characters!</div>
+                          <div *ngIf="languageForm.get('name').errors.maxlength">Language Name can have maximum 50 characters!</div>
+                          <div *ngIf="languageForm.get('name').errors.pattern">Please enter a valid Language Name!</div>
+                        </div>
+                        <div *ngIf="editFlag == true">
+                          <input type="hidden" formControlName="id">
+                        </div>
+                        <div *ngIf="error_messages.name" class="invalid-feedback">
+                          {{ error_messages.name }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-12 mb-2">
+                        <label for="logo">
+                          Logo
+                          <span style="color:red">*</span>
+                        </label>
+                        
+                        <input type="file" formControlName="logo" class="form-control" id="logo" accept="image/x-png,image/gif,image/jpeg,image/jpg"
+                          (change)="logoChange($event.target.files)"  />
+                        <span *ngIf="language_id">
+                          <p>Previously Selected Logo :</p>
+                          <img src="{{ currentLogo }}" style="width:150px;" />
+                        </span>
+                        <div *ngIf="submitted && !logo" class="invalid-feedback">
+                          Please Select File!
+                        </div>
+                        <div *ngIf="error_messages.logo" class="invalid-feedback">
+                          {{ error_messages.logo }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-12 mb-2">
+
+                      <label for="is_active">
+                        Is Active ?
+                      </label><br>
+
+                      <ui-switch defaultBgColor='#ff4d4d' labelOn="Yes" labelOff="No" formControlName="is_active">
+                      </ui-switch>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-12 float-left padding-1">
+            <div class="card">
+              <div class="card-body">
+                <div class="px-3">
+                  <div class="form-body">
+                    <h4 class="form-section">
+                      <i class="ft-settings"></i>
+                      Language Settings
+                    </h4>
+
+                    <ng-container formArrayName="settings">
+                      <ng-container *ngFor="let s of settings.controls; let i = index" [formGroupName]="i">
+                        <div class="row">
+                          <div class="form-group col-12 mb-2">
+
+                            <label for="color">
+                              Background Color
+                              <span style="color:red">*</span>
+                            </label>
+                            
+                            <input formControlName="bg_color" class="form-control" [(colorPicker)]="color1"
+                              [style.background]="color1" (colorPickerChange)="bgcolorChanged($event)" id="bg_color"
+                              autocomplete="off" />
+
+                            <div *ngIf="submitted && languageForm.get('settings')['controls'][i]['controls'].bg_color.errors" class="invalid-feedback">
+                              <div *ngIf="languageForm.get('settings')['controls'][i]['controls'].bg_color.errors.required">BG Color is required!</div>
+                            </div>
+                          
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-12 mb-2">
+
+                            <label for="color">
+                              Text Color
+                              <span style="color:red">*</span>
+                            </label>
+
+                            <input formControlName="text_color" class="form-control" [(colorPicker)]="color2"
+                              [style.background]="color2" (colorPickerChange)="textcolorChanged($event)" id="text_color"
+                              autocomplete="off" />
+                            <div *ngIf="submitted && languageForm.get('settings')['controls'][i]['controls'].text_color.errors" class="invalid-feedback">
+                              <div *ngIf="languageForm.get('settings')['controls'][i]['controls'].text_color.errors.required">Text Color is required!</div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                    <br>
+                    <br>
+                    <br>
+
+                    
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          </div>
+         
+         
+          <div class="form-actions center">
+
+          <div class="row">
+             <div class="col-md-12">
+                <button type="button" [routerLink]="['/language']" class="btn btn-raised btn-orange mr-1">
+                  <i class="ft-x"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-raised btn-primary">
+                  <i class="fa fa-check-square-o"></i> Save
+                </button>
+              </div>
+          </div>
+          </div>
+         
+          
+        </form>
+      </ng-container>
+
+      <ng-template #norecord>
+        <p>Loading Data...</p>
+      </ng-template>
+
+      <ng-template>
+        <p>Loading Data...</p>
+      </ng-template>
+      </div>
+      </div>
+      </div>
+    </div>
+  </section>
+</div>

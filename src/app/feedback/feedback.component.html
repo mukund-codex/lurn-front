@@ -1,0 +1,78 @@
+<div style="min-height: calc(100vh - 75px);">
+    <app-topbar *ngIf="isAccessible" (changeCampaign)="changeCampaign($event)"></app-topbar>
+    <section id="simple-table">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-border-shadow-0">
+                    <div class="card-header m-top-bottom-10 px-3">
+                        <h4 class="card-title">{{ title }}</h4>
+                        <app-actionbtns [showAdd]="false" [showExport]="showExport" [showImport]="false"></app-actionbtns>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="px-3">
+                            <form name="searchForm" #searchForm="ngForm" ngForm class="table-responsive">
+                                <div class="card-block" *ngIf="records">
+                                    <div style="float:right;"><b>Total Records : {{ records.meta?.pagination?.total }}</b></div>
+                                    <table class="table table-bordered table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr. No</th>
+                                                <th>Company Name</th>
+                                                <th>Campaign Name</th>
+                                                <th>Campaign Code</th>
+                                                <th>Category</th>
+                                                <th>Rating</th>
+                                                <th>Description</th>
+                                                <th>File URL</th>
+                                                <th>User name</th>
+                                                <th>User Mobile</th>
+                                                <th>Username</th>
+                                                <!-- <th>Geography Name</th> -->
+                                                <th>Date Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ng-container>
+                                                <tr *ngIf="!records.data.length">
+                                                    <td [attr.colSpan]="3">No Records Found!</td>
+                                                </tr>
+                                                <tr *ngFor="let row of records.data; let i=index">
+                                                    <th scope="row">
+                                                        {{ ((records.meta.pagination.current_page - 1) * records.meta.pagination.per_page) + i + 1 }}
+                                                    </th>
+                                                    <td>{{ row.campaign.companies.name }}</td>
+                                                    <td>{{ row.campaign.name }}</td>
+                                                    <td>{{ row.campaign.cid }}</td>
+                                                    <td>{{ row.category }}</td>
+                                                    <td>{{ row.rating }}</td>
+                                                    <td>{{ row.description }}</td>
+                                                    <td>
+                                                        <a *ngIf="row.file" href="{{ row.file }}" target="_blank">Preview</a>
+                                                    </td>
+                                                    <td>{{ row.user.first_name + " "+ row.user.last_name }}</td>
+                                                    <td>{{ row.user.mobile }}</td>
+                                                    <td>{{ row.user.username }}</td>
+                                                    <!-- <td>{{ row.user.geo_master[0].name }}</td> -->
+                                                    <td>{{ row.created_at }}</td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                    
+                                    <div *ngIf="records">
+                                        <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                                            [collectionSize]="records.meta.pagination.total"
+                                            [pageSize]="records.meta.pagination.per_page"
+                                            [(page)]="records.meta.pagination.current_page"></ngb-pagination>
+                                    </div>
+                                </div>
+                            </form>
+                            <ng-template #loading>Loading Data...</ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

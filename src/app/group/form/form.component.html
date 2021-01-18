@@ -1,0 +1,122 @@
+<div style="min-height: calc(100vh - 75px);">
+  <app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+  <section id="basic-form-layouts">
+  <div class="row match-height">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="px-3">
+            <ng-container *ngIf="buildForm; else norecord">
+              <form class="form form-horizontal" [formGroup]="groupForm" (ngSubmit)="onSubmit()">
+
+                <div class="form-body">
+                  <h4 class="form-section">
+                    <i class="ft-user"></i>
+                    {{ title }}
+                  </h4>
+
+                 
+
+                  <div class="form-group">
+                    <div class="row">
+                    <label class="col-md-3 pt-1" for="group_name">
+                      Group Name
+                      <span style="color:red;">*</span>
+                    </label>
+                    <div class="col-md-9">
+                      <input type="text" formControlName="group_name" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && formObj.group_name.errors }" maxlength="50" />
+                      <div *ngIf="submitted && formObj.group_name.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.group_name.errors.required">Group Name is required!</div>
+                        <div *ngIf="formObj.group_name.errors.minlength">Group must be atleast 3 characters!</div>
+                        <div *ngIf="formObj.group_name.errors.pattern">Please enter a valid Group Name!</div>
+                        <div *ngIf="formObj.group_name.errors.maxlength">Group can have maximum 50 characters!</div>
+                      </div>
+                      <div *ngIf="editFlag == true">
+                        <input type="hidden" formControlName="group_id">
+                      </div>
+                      <div *ngIf="error_messages.name" class="invalid-feedback">
+                        {{ error_messages.name }}
+                    </div>
+                    </div>
+                  </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="row">
+                    <label class="col-md-3 pt-1">Is Active ?</label>
+                    <div class="col-md-9">
+                      <div class="input-group">
+                        <ui-switch defaultBgColor='#ff4d4d' labelOn="Yes" labelOff="No" formControlName="is_active">
+                        </ui-switch>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="row">
+                    <label class="col-md-12 pt-1" for="campaign_id">Group Users</label>
+                    <div class="col-md-12">
+                      <ng-container *ngIf="usersData else norecord">
+                        <table class="table table-bordered table-condensed table-striped">
+                          <thead>
+                            <tr>
+                              <th>Role</th>
+                              <th>Add To Group</th>
+                            </tr>
+                          </thead>
+
+                          <tbody formArrayName="user_id" id="label-h">
+                            <tr *ngFor="let row of designations; let j=index" [formGroup]="group[row]">
+                              <td>
+                                {{ row }}
+                              </td>
+                              <td>
+                              <div class="row">
+                                <div class="col-md-12 col-xs-12 col-sm-12 p-2"> <input type="checkbox"
+                                  (change)="checkAll(row, $event.target.checked)" id="{{ j }}">
+                                  <label for="{{ j }}" style="font-weight:bold;">Select All</label>
+                                </div>
+                          
+                                <div class="col-md-6 col-xs-12 col-sm-12 p-2" *ngFor="let item of usersData[row]; let i=index">
+                                  <input (change)="onChange(item.user_id, $event.target.checked, row)"
+                                  [formControlName]="item.user_id" type="checkbox" id="{{ item.user_id }}"
+                                  value="{{ item.user_id }}">
+                                  <label for="{{ item.user_id }}">{{ item.name }}</label>
+                                </div>
+                              </div>
+                            </td>
+                            </tr>
+                        </table>
+                      </ng-container>
+                    </div>
+                  </div>
+
+                  </div>
+                </div>
+
+                <div class="form-actions center">
+                  <div class="col-md-3"></div>
+                  <div class="col-md-9">
+                    <button type="button" [routerLink]="['/group']" [queryParams]="{campaign_id: campaign_id}" class="btn btn-raised btn-orange mr-1">
+                      <i class="ft-x"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-raised btn-primary">
+                      <i class="fa fa-check-square-o"></i> Save
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </ng-container>
+
+            <ng-template #norecord>
+              <p>Loading Data...</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+</div>

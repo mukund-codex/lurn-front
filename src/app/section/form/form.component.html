@@ -1,0 +1,132 @@
+<section id="basic-form-layouts">
+	<div class="row match-height">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="px-3">
+						<ng-container *ngIf="buildForm; else norecord">
+							<form class="form form-horizontal striped-rows" [formGroup]="sectionForm"
+								(submit)="onSubmit()" enctype="multipart/form-data">
+								<div class="form-body">
+									<h4 class="form-section">
+										<i class="ft-user"></i>
+										{{ title }}
+									</h4>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="title">
+												Title
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="text" formControlName="title" maxlength="50"
+													class="form-control" id="title" autocomplete="off" />
+												<div *ngIf="submitted && sectionForm.get('title').errors"
+													class="invalid-feedback">
+													<div *ngIf="sectionForm.get('title').errors.required">
+														 Title is required!
+													</div>
+													<div *ngIf="sectionForm.get('title').errors.pattern">
+														 Title format is invalid!
+													</div>
+													<div *ngIf="sectionForm.get('title').errors.minlength">
+														Please Enter atleast 3 Characters!
+													</div>
+													<div *ngIf="sectionForm.get('title').errors.maxlength">
+														Title too long!
+													</div>
+												</div>
+												
+												<div *ngIf="error_messages.title" class="invalid-feedback">
+													{{ error_messages.title }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="description">
+												Description
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												
+													<!--<textarea type="text" formControlName="description" id="description" class="form-control"
+													></textarea>-->
+													<ckeditor formControlName="description"  [editor]="Editor"  data=""></ckeditor>
+												
+												<div *ngIf="submitted && sectionForm.get('description').errors"
+													class="invalid-feedback">
+													<div *ngIf="sectionForm.get('description').errors.required">
+														 Description is required!
+													</div>
+												</div>
+
+												<div *ngIf="error_messages.description" class="invalid-feedback">
+													{{ error_messages.description }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="sort_order">
+												Sort Order
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="number" formControlName="sort_order" 
+													class="form-control" id="sort_order" autocomplete="off" min="1"/>
+												
+												<div *ngIf="submitted && sectionForm.get('sort_order').errors"
+													class="invalid-feedback">
+													<div *ngIf="sectionForm.get('sort_order').errors.required">
+														 Sort Order is required!
+													</div>
+													<div *ngIf="sectionForm.get('sort_order').errors.pattern">
+														Sort Order format is invalid!
+												   </div>
+												</div>
+												
+												<div *ngIf="error_messages.sort_order" class="invalid-feedback">
+													{{ error_messages.sort_order }}
+												</div>
+												
+											</div>
+										</div>
+									</div>
+									
+
+									<div class="form-actions center">
+										<div class="col-md-3"></div>
+										<div class="col-sm-9">
+											<a [routerLink]="['/section']" [queryParams]="{course_id:course_id,campaign_id: campaign_id}" class="btn btn-raised btn-orange mr-1">
+												<i class="ft-x"></i>
+												Cancel
+											</a>
+
+											<button type="submit" class="btn btn-raised btn-purple">
+												<i class="fa fa-check-square-o"></i>
+												Save
+											</button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</ng-container>
+
+						<ng-template #norecord>
+							<p>Loading Data...</p>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

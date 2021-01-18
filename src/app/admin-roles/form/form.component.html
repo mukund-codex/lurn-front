@@ -1,0 +1,107 @@
+<section id="basic-form-layouts">
+	<div class="row match-height">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="px-3">
+						<ng-container *ngIf="buildForm; else norecord">
+							<form
+								class="form form-horizontal striped-rows"
+								[formGroup]="adminRolesForm"
+								(submit)="onSubmit()"
+								enctype="multipart/form-data"
+							>
+								<div class="form-body">
+									<h4 class="form-section">
+										<i class="ft-user"></i>
+										{{ title }}
+									</h4>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="name">
+												Admin Name
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input
+													type="text"
+													formControlName="name"
+													maxlength="50"
+													class="form-control"
+													id="name"
+													autocomplete="off"
+												/>
+												<div
+													*ngIf="adminRoles.get('name').errors && submitted"
+													class="invalid-feedback"
+												>
+													<div *ngIf="adminRoles.get('name').errors.required">
+														Admin Name is required!
+													</div>
+													<div *ngIf="adminRoles.get('name').errors.maxlength">
+														Admin Name must be less than 10 characters!
+													</div>
+													<div *ngIf="adminRoles.get('name').errors.pattern">
+														Admin Name must be letters, numbers or dashes!
+													</div>
+												</div>
+												<div *ngIf="error_messages.name" class="invalid-feedback">
+													{{ error_messages.name }}
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<label class="col-md-3 pt-1" for="name">
+												Role
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<ng-multiselect-dropdown
+													formControlName="permissions"
+													[placeholder]="'Select Role'"
+													[settings]="dropdownSettings"
+													[data]="adminPermissions"
+													(click)="elementTouched(adminRoles.get('permissions'))"
+												></ng-multiselect-dropdown>
+												<div
+													*ngIf="adminRoles.get('permissions').errors && submitted"
+													class="invalid-feedback"
+												>
+													<div *ngIf="adminRoles.get('permissions').errors.required">
+														Role is required!
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-actions center">
+										<div class="col-md-3 label-control"></div>
+										<div class="col-sm-9">
+											<a [routerLink]="['/admin/roles']" class="btn btn-raised btn-orange mr-1">
+												<i class="ft-x"></i>
+												Cancel
+											</a>
+											<button type="submit" class="btn btn-raised btn-purple">
+												<i class="fa fa-check-square-o"></i>
+												Save
+											</button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</ng-container>
+
+						<ng-template #norecord>
+							<p>Loading Data...</p>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

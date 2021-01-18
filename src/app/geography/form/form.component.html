@@ -1,0 +1,238 @@
+<div style="min-height: calc(100vh - 75px);">
+	<app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+	<section id="basic-form-layouts">
+		<div class="row match-height">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-body">
+						<div class="px-3">
+							<ng-container *ngIf="buildForm; else norecord">
+								<form class="form form-horizontal striped-rows" [formGroup]="geographyForm"
+									(submit)="onSubmit()">
+
+									<div class="form-body">
+										<h4 class="form-section">
+											<i class="ft-user"></i>
+											{{ title }}
+										</h4>
+										<div *ngIf="(typesData) as typesData">
+											<div class="form-group">
+												<div class="row">
+													<label class="col-md-3 pt-1" for="type">
+														Type
+														<span style="color:red;">*</span>
+													</label>
+													<div class="col-md-9">
+														<ng-multiselect-dropdown formControlName="type" [disabled]="disabled"
+															[placeholder]="'Select Type'" [settings]="dropdownSettings"
+															[data]="typesData"
+															(click)="elementTouched(geography.get('type'))">
+														</ng-multiselect-dropdown>
+
+														<div *ngIf="geography.get('type').errors && submitted"
+															class="invalid-feedback">
+															<div *ngIf="geography.get('type').errors.required">
+																Type is required!
+															</div>
+														</div>
+
+														<div *ngIf="geography.get('type').errors && submitted"
+															class="invalid-feedback">
+															<div *ngIf="geography.get('type').errors.invalid">
+																Selected Parent Id is Invalid!
+															</div>
+														</div>
+
+														<div *ngIf="error_messages.parent_id" class="invalid-feedback">
+															{{ error_messages.parent_id }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group" *ngIf="showField['National Zone']">
+											<div class="row">
+											<label class="col-md-3 pt-1" for="national_zone">
+												National Zone
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<ng-multiselect-dropdown formControlName="national_zone"
+													[placeholder]="'Select National Zone'" [settings]="dropdownSettings"
+													[data]="nationalZonesData"
+													(onSelect)="updateValue($event, 'National Zone')"
+													(onDeSelect)="removeValue($event, 'National Zone')"
+													(click)="elementTouched(geography.get('national_zone'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="geography.get('national_zone').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="geography.get('national_zone').errors.required">
+														National Zone is required!
+													</div>
+												</div>
+											</div>
+										</div>
+										</div>
+
+										<div class="form-group" *ngIf="showField.Zone">
+											<div class="row">
+											<label class="col-md-3 pt-1" for="zone">
+												Zone
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<ng-multiselect-dropdown formControlName="zone"
+													[placeholder]="'Select Zone'" [settings]="dropdownSettings"
+													[data]="zonesData"
+													(onSelect)="updateValue($event, 'Zone')"
+													(onDeSelect)="removeValue($event, 'Zone')"
+													(click)="elementTouched(geography.get('zone'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="geography.get('zone').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="geography.get('zone').errors.required">
+														Zone is required!
+													</div>
+												</div>
+											</div>
+										</div>
+										</div>
+
+										<div class="form-group" *ngIf="showField.Region">
+											<div class="row">
+											<label class="col-md-3 pt-1" for="region">
+												Region
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<ng-multiselect-dropdown formControlName="region"
+													[placeholder]="'Select Region'" [settings]="dropdownSettings"
+													[data]="regionsData"
+													(onSelect)="updateValue($event, 'Region')"
+													(onDeSelect)="removeValue($event, 'Region')"
+													(click)="elementTouched(geography.get('region'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="geography.get('region').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="geography.get('region').errors.required">
+														Region is required!
+													</div>
+												</div>
+											</div>
+										</div>
+										</div>
+
+										<div class="form-group" *ngIf="showField.Area">
+											<div class="row">
+											<label class="col-md-3 pt-1" for="area">
+												Area
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<ng-multiselect-dropdown formControlName="area"
+													[placeholder]="'Select Area'" [settings]="dropdownSettings" 
+													[data]="areaData"
+													[settings]="dropdownSettings" (onSelect)="updateValue($event, 'Area')"
+													(onDeSelect)="removeValue($event, 'Area')"
+													(click)="elementTouched(geography.get('area'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="geography.get('area').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="geography.get('area').errors.required">
+														Area is required!
+													</div>
+												</div>
+											</div>
+										</div>
+										</div>
+
+										<div class="form-group" *ngIf="showField.City">
+											<div class="row">
+											<label class="col-md-3 pt-1" for="city">
+												City
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<ng-multiselect-dropdown formControlName="city"
+													[placeholder]="'Select City'" [settings]="dropdownSettings" 
+													[data]="cityData"
+													[settings]="dropdownSettings" (onSelect)="updateValue($event, 'City')"
+													(onDeSelect)="removeValue($event, 'City')"
+													(click)="elementTouched(geography.get('city'))">
+												</ng-multiselect-dropdown>
+
+												<div *ngIf="geography.get('city').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="geography.get('city').errors.required">
+														City is required!
+													</div>
+												</div>
+											</div>
+										</div>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+											<label class="col-md-3 pt-1" for="name">
+												Geography Name
+												<span style="color:red;">*</span>
+											</label>
+											<div class="col-md-9">
+												<input type="text" formControlName="name" id="name" class="form-control" />
+												<div *ngIf="geography.get('name').errors && submitted"
+													class="invalid-feedback">
+													<div *ngIf="geography.get('name').errors.required">
+														Name is required!
+													</div>
+													<div *ngIf="geography.get('name').errors.minlength">
+														Name must be atleast 3 characters!
+													</div>
+													<div *ngIf="geography.get('name').errors.maxlength">
+														Name can have maximum 50 characters!
+													</div>
+													<div *ngIf="geography.get('name').errors.pattern">
+														Name must be letters, numbers or dashes!
+													</div>
+												</div>
+												<div *ngIf="error_messages.name" class="invalid-feedback">
+													{{ error_messages.name }}
+												</div>
+											</div>
+										</div>
+										</div>
+
+										<div class="form-actions center">
+											<div class="col-md-3"></div>
+											<div class="col-md-9">
+												<a [routerLink]="['/geography']" [queryParams]="{campaign_id: campaign_id}" class="btn btn-raised btn-orange mr-1">
+													<i class="ft-x"></i>
+													Cancel
+												</a>
+												<button type="submit" class="btn btn-raised btn-purple">
+													<i class="fa fa-check-square-o"></i>
+													Save
+												</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</ng-container>
+							<ng-template #norecord>
+								<div class="card col-12">
+									<div class="card-body mt-3">
+										<p>Loading Data...</p>
+									</div>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>

@@ -1,0 +1,49 @@
+<!-- Navbar (Header) Starts -->
+<nav class="navbar navbar-expand-lg navbar-light bg-faded">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle d-lg-none float-left" data-toggle="collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<!--<img src="assets/img/logos/logo-black.png" class="d-lg-none pt-2">-->
+		</div>
+		<div class="navbar-container">
+			<div class="" id="navbarSupportedContent">
+				<ul class="navbar-nav">
+					<!-- <li class="nav-item mr-2">
+						<a href="javascript:;" class="nav-link" id="navbar-fullscreen" appToggleFullscreen>
+							<i class="ft-maximize font-medium-3 blue-grey darken-4"></i>
+							<p class="d-none">fullscreen</p>
+						</a>
+					</li> -->
+
+					<li class="nav-item" ngbDropdown placement="bottom-right">
+						<a class="nav-link position-relative" id="dropdownBasic3" ngbDropdownToggle>
+							<img src="../../../../assets/img/profile-icon.png" alt="" width="30px">
+							<!-- <i class="ft-user font-medium-3 blue-grey darken-4"></i> -->
+							<p class="d-none">User Settings</p>
+						</a>
+						<div ngbDropdownMenu aria-labelledby="dropdownBasic3" style="top: 48px;left: -110px;">
+							<a class="dropdown-item" *ngIf="showProfile" [routerLink]="['/profile']">
+								<i class="ft-user mr-2"></i>
+								<span>Profile</span>
+							</a>
+							<a class="dropdown-item" [routerLink]="['/changePassword']">
+								<i class="ft-settings mr-2"></i>
+								<span>Change Password</span>
+							</a>
+							<a class="dropdown-item" (click)="logout()">
+								<i class="ft-power mr-2"></i>
+								<span>Logout</span>
+							</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>
+<!-- Navbar (Header) Ends -->

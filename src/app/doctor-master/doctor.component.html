@@ -1,0 +1,68 @@
+<section id="simple-table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Doctor</h4>
+          <app-actionbtns *ngIf="doctorData; else loading" [addRedirect]="'/doctor/add'" (download)="export()" [showImport]="false">
+          </app-actionbtns>
+        </div>
+
+        <div class="card-body">
+          <p *ngIf="message">{{ message.text }}</p>
+          <div class="card-block">
+
+            <table class="table table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Sr. No</th>
+                  <th>Company Name</th>
+                  <th>Campaign Name</th>
+                  <th>Camp Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td><input type="text" (keyup)="search()" class="form-control" placeholder="Search By Name"
+                      [(ngModel)]="doctor_name"></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+
+                <ng-container *ngIf="(doctorData | async) as doctors; else loading">
+                  <tr *ngFor="let row of doctors.data; let i=index">
+                    <td>
+                      <a class="ng2-smart-action ng2-smart-action-edit-edit" (click)="edit(row.id)">
+                        <i class="ft-edit-2 info font-medium-1 mr-2"></i>
+                      </a>
+                      <a class="ng2-smart-action ng2-smart-action-delete-delete" (click)="delete(row.id)">
+                        <i class="ft-x danger font-medium-1 mr-2"></i>
+                      </a>
+                    </td>
+                    <th scope="row">
+                      {{ ((doctors.meta.pagination.current_page - 1) * doctors.meta.pagination.per_page)
+                      + i +
+                      1 }}
+                    </th>
+                    <td>ABC</td>
+                    <td>{{ row.campaign.name }}</td>
+                    <td>{{ row.camp.name }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+            <div *ngIf="(doctorData | async) as doctors">
+              <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                [collectionSize]="doctors.meta.pagination.total" [pageSize]="doctors.meta.pagination.per_page"
+                [(page)]="doctors.meta.pagination.current_page"></ngb-pagination>
+            </div>
+          </div>
+          <ng-template #loading>Loading Doctor Data</ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

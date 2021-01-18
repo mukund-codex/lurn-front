@@ -1,0 +1,152 @@
+.form-control {
+    color: #75787d !important;
+}
+
+label{
+    color: #444444 !important;
+}
+
+.card-inverse{
+    box-shadow: none !important;
+}
+
+.col-grey{
+    color: #444444 !important;
+}
+
+.login-shadow
+{
+    -webkit-box-shadow: -1px 3px 47px -17px rgba(0,0,0,0.75);
+-moz-box-shadow: -1px 3px 47px -17px rgba(0,0,0,0.75);
+box-shadow: -1px 3px 47px -17px rgba(0,0,0,0.75);
+}
+
+
+/* Base for label styling */
+[type="checkbox"]:not(:checked),
+[type="checkbox"]:checked {
+  position: absolute;
+  left: -9999px;
+}
+[type="checkbox"]:not(:checked) + label,
+[type="checkbox"]:checked + label {
+	position: relative;
+    padding-left: 2.85em;
+    cursor: pointer;
+    padding-top: 0.2em;
+}
+
+/* checkbox aspect */
+[type="checkbox"]:not(:checked) + label:before,
+[type="checkbox"]:checked + label:before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 2.00em; height: 2.00em;
+  border: 2px solid #673ab7;
+  background: #fff;	
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.1);
+}
+/******* new css **********/
+section#login{
+ background: radial-gradient(85.55% 85.55% at 50% 50%, #FFFFFF 19.27%, #9F86FF 100%), #C1B1FF;
+  overflow: hidden;
+}
+.card.login-box {
+  padding: 78px 26px;
+  width: 85%;
+  margin: 85px auto;
+  
+}
+.form-box{
+  padding: 0px 35px;
+}
+.login-top-vector{
+  position: absolute;
+  top: -11px;
+    left: 0px;
+    z-index: 1;
+    width: 315px;
+
+}
+.login-bottom-vector{
+  position: absolute;
+     bottom: -160px;
+    right: -110px;
+    z-index: 2;
+    width: 324px;
+}
+.bubble-vector{
+  position: absolute;
+    top: -50px;
+    left: 45px;
+}
+.btn-blue{
+  background: #1aafef !important;
+    border: none;
+    color: #fff !important;
+    width: 130px;
+}
+.overlay{
+  position: absolute;
+    background: rgb(255 255 255 / 83%);
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    height: 100%;
+    border-radius: .25rem;
+    box-shadow: 1px 4px 48px rgba(0, 0, 0, 0.96);
+}
+
+@media only screen and (max-width:768px){
+  .hidden-sm{
+    display: none;
+  }
+}
+
+/* checked mark aspect */
+[type="checkbox"]:not(:checked) + label:after,
+[type="checkbox"]:checked + label:after {
+  content: '\2713\0020';
+  position: absolute;
+  top: .15em; left: .18em;
+  font-size: 2.0em;
+  line-height: 0.8;
+  color: #673ab7;
+  transition: all .2s;
+  font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', Arial;
+}
+/* checked mark aspect changes */
+[type="checkbox"]:not(:checked) + label:after {
+  opacity: 0;
+  transform: scale(0);
+}
+[type="checkbox"]:checked + label:after {
+  opacity: 1;
+  transform: scale(1);
+}
+/* disabled checkbox */
+[type="checkbox"]:disabled:not(:checked) + label:before,
+[type="checkbox"]:disabled:checked + label:before {
+  box-shadow: none;
+  border-color: #bbb;
+  background-color: #ddd;
+}
+[type="checkbox"]:disabled:checked + label:after {
+  color: #999;
+}
+[type="checkbox"]:disabled + label {
+  color: #aaa;
+}
+/* accessibility */
+[type="checkbox"]:checked:focus + label:before,
+[type="checkbox"]:not(:checked):focus + label:before {
+  border: 2px solid #673ab7;
+}
+
+/* hover style just for information */
+label:hover:before {
+  border: 2px solid #673ab7!important;
+}

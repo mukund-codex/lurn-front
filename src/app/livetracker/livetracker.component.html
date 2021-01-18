@@ -1,0 +1,145 @@
+<div style="min-height: calc(100vh - 75px);">
+    <app-topbar *ngIf="isAccessible" (changeCampaign)="changeCampaign($event)"></app-topbar>
+    <section id="simple-table">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-border-shadow-0">
+                    <div class="card-header m-top-bottom-10 px-3">
+                        <h4 class="card-title">{{ title }}</h4>
+                        <app-actionbtns [showAdd]="false" [showExport]="showExport" [showImport]="false" (download)="export()">
+                        </app-actionbtns>
+                    </div>
+                    <div class="card-body">
+                        <div class="px-3">
+                            <form name="searchForm" #searchForm="ngForm" ngForm class="table-responsive">
+                            <div class="card-block" *ngIf="records">
+                                <div style="float:right;"><b class="tot-record">Total Records : {{ records.meta?.pagination?.total }}</b></div>
+                                    <table class="table table-bordered table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr. No</th>
+                                                <th>Company Name</th>
+                                                <th>Campaign Name</th>
+                                                <th>Campaign Code</th>
+                                                <th>Module Name</th>
+                                                <th>Module Type</th>
+                                                <th>Language Name</th>
+                                                <th>Group Name</th>
+                                                <th *ngFor="let header of formHeaders">
+                                                    {{ header.label }}
+                                                </th>
+                                                <th>User Name</th>
+                                                <th>User Mobile No.</th>
+                                                <th>Master File Name</th>
+                                                <th>Template Name</th>
+                                                <th>Is Processed</th>
+                                                <th>File Url</th>
+                                                <th>Date Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <input type="text" name="module_name" ngModel class="form-control"
+                                                        placeholder="Module" autocomplete="off" />
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    <input type="text" name="language_name" ngModel class="form-control"
+                                                        placeholder="Language" autocomplete="off" />
+                                                </td>
+                                                <td></td>
+                                                <td *ngFor="let header of formHeaders"></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <input type="text" name="masterfile_name" ngModel class="form-control"
+                                                        placeholder="Master File Name" autocomplete="off" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="template_name" ngModel class="form-control"
+                                                        placeholder="Template Name" autocomplete="off" />
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <ng-container>
+                                                <tr *ngIf="!records.data.length">
+                                                    <td [attr.colSpan]="3">No Records Found!</td>
+                                                </tr>
+                                                <tr *ngFor="let row of records.data; let i=index">
+                                                    <th scope="row">
+                                                        {{ ((records.meta.pagination.current_page - 1) * records.meta.pagination.per_page) + i + 1 }}
+                                                    </th>
+                                                    <td>{{ row.campaign.company.name }}</td>
+                                                    <td>{{ row.campaign.name }}</td>
+                                                    <td>{{ row.campaign.cid }}</td>
+                                                    <td>{{ row.module.name }}</td>
+                                                    <td>{{ row.module.type }}</td>
+                                                    <td>{{ row.language.name }}</td>
+                                                    <td>{{ row.module.group.name }}</td>
+                                                    <td *ngFor="let field of formHeaders; let j=index">
+                                                        <span *ngIf="field.type == 'file'; else text">
+                                                            <a href="{{row.doctor.info[field.name]}}"
+                                                                target="_blank">View File</a>
+                                                        </span>
+                                                        <ng-template #text>{{row.doctor.info[field.name]}}</ng-template>
+                                                    </td>
+                                                    <td>{{ row.user.name }}</td>
+                                                    <td>{{ row.user.mobile }}</td>
+                                                    <td>{{ row.masterfile?.name }}</td>
+                                                    <td>{{ row.template?.name }}</td>
+                                                    <td *ngIf="row.module.type == 'image'">{{row.image[0]?.is_processed}}
+                                                    </td>
+                                                    <td *ngIf="row.module.type == 'image'">
+                                                        <a *ngIf="row.image[0]?.is_processed"
+                                                            href="{{row.image[0].response?.result}}" target="_blank">
+                                                            View File
+                                                        </a>
+                                                    </td>
+
+                                                    <td *ngIf="row.module.type == 'gif'">{{row.gif[0]?.is_processed}}
+                                                    </td>
+                                                    <td *ngIf="row.module.type == 'gif'">
+                                                        <a *ngIf="row.gif[0]?.is_processed"
+                                                            href="{{row.gif[0].response?.result}}" target="_blank">
+                                                            View File
+                                                        </a>
+                                                    </td>
+
+                                                    <td *ngIf="row.module.type == 'video'">{{row.video[0]?.is_processed}}
+                                                    </td>
+                                                    <td *ngIf="row.module.type == 'video'">
+                                                        <a *ngIf="row.video[0]?.is_processed"
+                                                            href="{{row.video[0].response?.result}}" target="_blank">
+                                                            View File
+                                                        </a>
+                                                    </td>
+
+                                                    <td>{{ row.created_at }}</td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                
+                                <div *ngIf="records">
+                                    <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                                        [collectionSize]="records.meta.pagination.total"
+                                        [pageSize]="records.meta.pagination.per_page"
+                                        [(page)]="records.meta.pagination.current_page"></ngb-pagination>
+                                </div>
+                            </div>
+                        </form>
+                            <ng-template #loading>Loading Data...</ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

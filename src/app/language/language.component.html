@@ -1,0 +1,78 @@
+<section id="simple-table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-shadow-0">
+        <div class="card-header m-top-bottom-10">
+          <h4 class="card-title module-title">{{ title }}</h4>
+          <app-actionbtns [addRedirect]="'/language/add'" [showExport]="showExport" (download)="export()" [showImport]="false"></app-actionbtns>
+
+        </div>
+
+        <swal
+					#deleteSwal
+					title="Are you sure ?"
+					text="This cannot be undone"
+					icon="question"
+					[showCancelButton]="true"
+					[focusCancel]="true">
+				</swal>
+
+        <div class="card-body">
+
+          <div class="card-block">
+            <div *ngIf="records" style="float:right;"><b class="tot-record">Total Records : {{ records.meta?.pagination?.total }}</b></div>
+            <form name="searchForm" #searchForm="ngForm">
+              <div class="table-responsive">
+                <table class="table table-bordered table-condensed">
+                  <thead>
+                    <tr>
+                      <th>Action</th>
+                      <th>Sr. No</th>
+                      <th>Language Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td><input type="text" name="language_name" (keyup)="search()" class="form-control" placeholder="Search By Name"></td>
+                    </tr>
+
+                    <ng-container *ngIf="records; else loading">
+                      <tr *ngIf="!records.data.length">
+                        <td [attr.colSpan]="3">No Records Found!</td>
+                      </tr>
+                      <tr *ngFor="let row of records.data; let i=index">
+                        <td>
+                          <a class="ng2-smart-action ng2-smart-action-edit-edit"
+                            [routerLink]="['/language/edit/' + row.id]">
+                            <i class="ft-edit-2 info font-medium-1 mr-2"></i>
+                          </a>
+                          <a [swal]="deleteSwal" (confirm)="delete(row.id)" *ngIf="showDelete" class="ng2-smart-action ng2-smart-action-delete-delete">
+                            <i class="ft-x danger font-medium-1 mr-2"></i>
+                          </a>
+                        </td>
+                        <th scope="row">
+                          {{ ((records.meta.pagination.current_page - 1) * records.meta.pagination.per_page) + i + 1 }}
+                        </th>
+                        <td>{{ row.name }}</td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </form>
+
+            <div *ngIf="records">
+              <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                [collectionSize]="records.meta.pagination.total" [pageSize]="records.meta.pagination.per_page"
+                [(page)]="records.meta.pagination.current_page"></ngb-pagination>
+            </div>
+
+          </div>
+          <ng-template #loading>Loading Data...</ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

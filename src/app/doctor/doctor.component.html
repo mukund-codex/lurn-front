@@ -1,0 +1,121 @@
+<div style="min-height: calc(100vh - 75px);">
+  <app-topbar (changeCampaign)="changeCampaign($event)"></app-topbar>
+  <section id="simple-table">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card card-border-shadow-0">
+          <div class="card-header m-top-bottom-10">
+            <h4 class="card-title module-title">Doctor</h4>
+            <a class="btn btn-raised btn-orange m-1" (click)="add()" *ngIf="camp_id" style="float:right;">
+              <i class="ft-plus-circle white warning font-medium-1" style="color: #fff !important;"></i>
+            </a>
+            <div *ngIf="!noFormFound">
+              <app-actionbtns [addRedirect]="'/doctor/add'" [uploadFields]="uploadFields" (uploadFile)="upload($event)"
+                (uploaded)="fileChange($event)" [showExport]="true" (download)="export()">
+              </app-actionbtns>
+            </div>
+          </div>
+
+          <swal
+            #deleteSwal
+            title="Are you sure ?"
+            text="This cannot be undone"
+            icon="question"
+            [showCancelButton]="true"
+            [focusCancel]="true">
+          </swal>
+
+          <div class="card-body">
+            <p *ngIf="message">{{ message.text }}</p>
+            <div *ngIf="records" style="float:right;"><b class="tot-record">Total Records : {{ records.meta?.pagination?.total }}</b></div>
+
+            <div class="card-block">
+              <form name="searchForm" #searchForm="ngForm" ngForm>
+              <p *ngIf="noFormFound"><br><br> No Form Found! Please add form first to view the Data! </p>
+              <div *ngIf="!noFormFound">
+                <ng-container *ngIf="records as doctors">
+                  <div class="table-responsive">
+                  <table class="table table-bordered table-condensed">
+                    <thead>
+                      <tr>
+                        <th class="text-center"><input type="checkbox" (change)="checkAll($event)"></th>
+                        <th>Action</th>
+                        <th>Sr. No</th>
+                        <th>User</th>
+                        <th *ngFor="let header of formHeaders">
+                          {{ header.label }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <input type="text" name="user_name" ngModel class="form-control"
+													  placeholder="Search User" autocomplete="off" />
+                        </td>
+                        <td *ngFor="let field of formData; let j=index">
+                          <input *ngIf="field.type !='file'" type="text" name="{{ field.name }}" ngModel class="form-control"
+													  placeholder="{{ field.label }}" autocomplete="off" />
+                        </td>
+                      </tr>
+
+                      <tr *ngIf="!records.data.length">
+                        <td [attr.colSpan]="11">No Records Found!</td>
+                      </tr>
+                      
+                      <tr *ngFor="let row of doctors.data; let i=index">
+                        <td class="text-center"><input type="checkbox" [checked]="row.selected" data-md-icheck  id="{{row.id}}" name="deletecheck" value="{{row.id}}" (click)="selectID(row.id,$event)"></td>
+                        <td>
+                          <a class="ng2-smart-action ng2-smart-action-edit-edit"
+                            [routerLink]="['/doctor/edit/' + row.id]"
+                            [queryParams]="{campaign_id : campaign_id}">
+                            <i class="ft-edit-2 info font-medium-1 mr-2"></i>
+                          </a>
+                          <a [swal]="deleteSwal" (confirm)="delete(row.id)" *ngIf="showDelete" class="ng2-smart-action ng2-smart-action-delete-delete">
+                            <i class="ft-x danger font-medium-1 mr-2"></i>
+                          </a>
+                        </td>
+                        <td scope="row">
+                          {{ ((doctors.meta.pagination.current_page - 1) * doctors.meta.pagination.per_page)
+                            + i +1 }}
+                        </td>
+                        <td> {{ row.user.name }}</td>
+                        <td *ngFor="let field of formData; let j=index">
+                          <span *ngIf="field.type==='file'">
+                            <a target="_blank" [href]="row[field['name']]">View File</a>
+                          </span>
+                          <span *ngIf="field.type!=='file'">
+                            {{ row[field['name']] }}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <br><br>
+										<div *ngIf="SelectedIDs.length && showMultiDelete">
+                      <button [swal]="deleteSwal" class="btn btn-danger" style="color:#fff !important;" (confirm)="deleteSelected()">Delete</button>
+                    </div>
+                    <div *ngIf="!SelectedIDs.length && showMultiDelete">
+                      <button class="btn btn-danger" style="color:#fff !important;" (click)="invalidSelection()">Delete</button>
+                    </div>
+										<br>
+                  </table>
+                </div>
+                  <div *ngIf="records as doctors">
+                    <ngb-pagination (pageChange)="pageChange($event)" [maxSize]="3" [rotate]="true"
+                      [collectionSize]="doctors.meta.pagination.total" [pageSize]="doctors.meta.pagination.per_page"
+                      [(page)]="doctors.meta.pagination.current_page"></ngb-pagination>
+                  </div>
+                </ng-container>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

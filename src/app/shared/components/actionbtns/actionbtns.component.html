@@ -1,0 +1,33 @@
+<div style="float:right;margin-bottom: 10px;">
+	<a class="btn btn-raised btn-purple m-1" *ngIf="showAdd !== false" (click)="add()">
+		<i class="ft-plus-circle white warning font-medium-1" style="color: #fff !important;"></i>
+	</a>
+
+	<a class="btn btn-raised btn-purple m-1" *ngIf="showExport !== false" (click)="initiateExport()">
+		<i class="ft-download white warning font-medium-1" style="color: #fff !important;"></i>
+	</a>
+
+	<button type="button" *ngIf="showImport !== false" class="btn btn-raised btn-purple m-1"
+		(click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+		<i class="ft-upload white warning font-medium-1" style="color: #fff !important;"></i>
+	</button>
+</div>
+
+<div id="collapseExample" [ngbCollapse]="isCollapsed" >
+	<form (ngSubmit)="upload()" #uploadForm="ngForm" style="margin-top:60px;margin-bottom:5px;">
+		<div class="form-group fupload-main-contianer" id="upcsv" >
+			<b>Upload CSV</b>
+			<br/>
+			<div class="fupload">
+			<input type="file" name="upload" id="upload" class="" (change)="onChange($event)" /><br />
+			</div>
+		<div class="fbtn-upload">
+			<button type="submit" class="btn btn-raised btn-purple">
+				Upload
+			</button>
+			<div style="clear:both;"></div>
+		</div>
+			<span class="text-danger text-csv">Csv Format ({{ uploadFields }})</span>
+		</div>
+	</form>
+</div>

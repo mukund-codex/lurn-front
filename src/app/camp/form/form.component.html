@@ -1,0 +1,247 @@
+<section id="basic-form-layouts">
+  <div class="row match-height">
+    <div class="col-md-12">
+      <ng-container *ngIf="buildForm; else norecord">
+        <div class="card">
+          <div class="card-body">
+            <div class="px-3">
+              <form class="form form-horizontal striped-rows" [formGroup]="campForm"
+                (ngSubmit)="onSubmit()">
+
+                <div class="form-body">
+                  <h4 class="form-section">
+                    <i class="ft-user"></i>
+                    {{ title }}
+                  </h4>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="name">Camp Name</label>
+                    <div class="col-md-9">
+                      <input type="text" formControlName="name" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && formObj.name.errors }" />
+                      <div *ngIf="submitted && formObj.name.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.name.errors.required">Camp Name is required!</div>
+                      </div>
+                      <div *ngIf="editFlag == true">
+                        <input type="hidden" formControlName="camp_id">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="logo">
+                      Camp Logo
+                    </label>
+                    <div class="col-md-9">
+                      <input type="file" formControlName="logo" class="form-control" id="logo"
+                        (change)="logoChange($event.target.files)" />
+                      <span *ngIf="camp_id">
+                        <p>
+                          Previously Selected Logo :
+                        </p>
+                        <img src="{{ currentLogo }}" style="width:150px;" />
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="company_id">Company Name</label>
+                    <div class="col-md-9">
+
+                      <ng-container *ngIf="(companyData | async) as companies">
+                        <ng-multiselect-dropdown formControlName="company_id" (onSelect)="getCampaign($event)"
+                          [placeholder]="
+													'Select Company'
+												" [data]="companies.data" [settings]="dropdownSettingsCompany"></ng-multiselect-dropdown>
+                      </ng-container>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="campaign_id">Campaign Name</label>
+                    <div class="col-md-9">
+                      <ng-container *ngIf="(campaignData | async) as resultData">
+                        <ng-multiselect-dropdown formControlName="campaign_id" (onSelect)="getGroup($event)"
+                          [placeholder]=" 'Select Campaign' " [data]="resultData.data" [settings]="dropdownSettingsSingleSelect">
+                        </ng-multiselect-dropdown>
+                      </ng-container>
+
+                      <div *ngIf="submitted && formObj.campaign_id.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.campaign_id.errors.required">Campaign Name is required!</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="module_id">Module Name</label>
+                    <div class="col-md-9">
+                      <ng-container *ngIf="(modulesData | async) as modulesData">
+                        <ng-multiselect-dropdown formControlName="module_id" [placeholder]="'Select Module'"
+                          [data]="modulesData.data" [settings]="dropdownSettingsModule">
+                        </ng-multiselect-dropdown>
+                      </ng-container>
+
+                      <div *ngIf="submitted && formObj.module_id.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.module_id.errors.required">Module Name is required!</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="group_id">Group Name</label>
+                    <div class="col-md-9">
+                      <ng-container *ngIf="(groupData | async) as group">
+                        <ng-multiselect-dropdown formControlName="group_id" [placeholder]=" 'Select Group ' "
+                          [data]="group.data" [settings]="dropdownSettingsSingleSelect">
+                        </ng-multiselect-dropdown>
+                      </ng-container>
+
+                      <div *ngIf="submitted && formObj.group_id.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.group_id.errors.required">Group Name is required!</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="form_id">Form Name</label>
+                    <div class="col-md-9">
+                      <ng-container *ngIf="(formsData | async) as formb">
+                        <ng-multiselect-dropdown formControlName="form_id" [placeholder]=" 'Select Form ' "
+                          [data]="formb.data" [settings]="dropdownSettingsSingleSelect">
+                        </ng-multiselect-dropdown>
+                      </ng-container>
+
+                      <div *ngIf="submitted && formObj.form_id.errors" class="invalid-feedback">
+                        <div *ngIf="formObj.form_id.errors.required">Form Name is required!</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="start_date">Camp Start Date</label>
+                    <div class="col-md-9">
+                      <div class="input-group">
+                        <input class="form-control" placeholder="dd-mm-yyyy" formControlName="start_date" ngbDatepicker
+                          #start_date="ngbDatepicker"
+                          [ngClass]="{ 'is-invalid': submitted && formObj.start_date.errors }">
+                        <div class="input-group-addon" (click)="start_date.toggle()">
+                          <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                        </div>
+                        <div *ngIf="submitted && formObj.start_date.errors" class="invalid-feedback">
+                          <div *ngIf="formObj.start_date.errors.required">Camp Start Date is required!</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="end_date">Camp End Date</label>
+                    <div class="col-md-9">
+                      <div class="input-group">
+                        <input class="form-control" placeholder="dd-mm-yyyy" formControlName="end_date" ngbDatepicker
+                          #end_date="ngbDatepicker" [ngClass]="{ 'is-invalid': submitted && formObj.end_date.errors }">
+                        <div class="input-group-addon" (click)="end_date.toggle()">
+                          <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                        </div>
+                        <div *ngIf="submitted && formObj.end_date.errors" class="invalid-feedback">
+                          <div *ngIf="formObj.end_date.errors.required">Camp End Date is required!</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <ng-container formArrayName="settings">
+                    <ng-container *ngFor="let s of settings.controls; let i = index" [formGroupName]="i">
+                      <div class="form-group row">
+                        <label class="col-md-3 label-control" for="color">
+                          Color
+                        </label>
+                        <div class="col-md-9">
+                          <input formControlName="color" class="form-control" [(colorPicker)]="color1"
+                            [style.background]="color1" (colorPickerChange)="colorChanged($event)" id="color"
+                            autocomplete="off" />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-md-3 label-control" for="limit_per_user">
+                          Limit Per User
+                        </label>
+                        <div class="col-md-9">
+                          <input type="text" id="limit_per_user" formControlName="limit_per_user" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && formObj.settings['controls'][0]['controls'].limit_per_user.errors }" />
+
+                          <div *ngIf="submitted && formObj.settings['controls'][0]['controls'].limit_per_user.errors"
+                            class="invalid-feedback">
+                            <div *ngIf="formObj.settings['controls'][0]['controls'].limit_per_user.errors.pattern">Limit Must
+                              be numeric!
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label class="col-md-3 label-control" for="is_doctor_editable">
+                          Is Doctor Editable ?
+                        </label>
+                        <div class="col-md-9">
+                          <div class="input-group">
+                            <ui-switch defaultBgColor='#ff4d4d' labelOn="Yes" labelOff="No" formControlName="is_doctor_editable">
+                            </ui-switch>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label class="col-md-3 label-control" for="is_doctor_add">
+                          Can add doctor ?
+                        </label>
+                        <div class="col-md-9">
+                          <div class="input-group">
+                            <ui-switch defaultBgColor='#ff4d4d' labelOn="Yes" labelOff="No" formControlName="is_doctor_add">
+                            </ui-switch>
+                          </div>
+                        </div>
+                      </div>
+
+                    </ng-container>
+                  </ng-container>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control">
+                      Is Active ?
+                    </label>
+                    <div class="col-md-9">
+                      <div class="input-group">
+                        <ui-switch defaultBgColor='#ff4d4d' labelOn="Yes" labelOff="No" formControlName="is_active">
+                        </ui-switch>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-actions center">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9">
+                      <button type="button" [routerLink]="['/camp']" class="btn btn-raised btn-orange mr-1">
+                        <i class="ft-x"></i> Cancel
+                      </button>
+                      <button type="button" (click)="onSubmit()" class="btn btn-raised btn-primary">
+                        <i class="fa fa-check-square-o"></i> Save
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </ng-container>
+
+      <ng-template #norecord>
+        <p>Data Loading...</p>
+      </ng-template>
+    </div>
+  </div>
+</section>

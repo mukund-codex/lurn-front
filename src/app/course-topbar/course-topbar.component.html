@@ -1,0 +1,22 @@
+<div class="col-xl-10 col-lg-10 col-md-10 col-sm-6 topbar-container" style="margin-top:5px;">
+    <ng-container *ngIf="(courses | async) as resultData">
+        <div class="row">
+            <div class="col-xl-4 col-lg-4 col-sm-12">
+            <ng-multiselect-dropdown
+                [(ngModel)]="selectedCourse" [placeholder]=" 'Select Course'" [settings]="dropdownSettingsModule"
+                [data]="resultData.data" (onSelect)="changeCourse.emit($event)">
+            </ng-multiselect-dropdown>
+            </div>
+            <div class="col-xl-8 col-lg-8 col-sm-12">
+            <table class="table table-bordered" style=" border-collapse:separate;border-spacing: 0;
+            border: 2px solid #009B77 !important;width:auto;
+            border-radius:5px;margin-top:-2px !important;">
+                <tr style="font-weight: bold;">
+                <td style="padding-top: 2px;padding-bottom: 5px;color:crimson;margin-right: 0px;">Valid From : {{ start_date }}</td>
+                <td style="padding-top: 2px;padding-bottom: 5px;border-left: 1px solid #000;color:crimson;">Valid Till : {{ end_date }}</td>
+                </tr>
+            </table>
+            </div>
+        </div>
+    </ng-container>
+</div>

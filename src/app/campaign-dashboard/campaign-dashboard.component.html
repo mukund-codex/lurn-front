@@ -1,0 +1,51 @@
+<div style="min-height: calc(100vh - 75px);">
+    <app-topbar *ngIf="isAccessible" (changeCampaign)="changeCampaign($event)"></app-topbar>
+    <section>
+        <ng-container *ngIf="campaignDashboardData | async as result">
+          <div class="container mt-5">
+              <div class="row">
+                  <div class="col-lg-4 col-sm-4 col-container">
+                    <div class="card col-cell">
+                      <div class="card-header text-center flex-column" style="flex: auto">
+                        <h5><img src="assets/img/map.svg" width="35"> Total Geography</h5>
+                        <h2>{{ result.count.total_geography }}</h2>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-4 col-container">
+                    <div class="card col-cell">
+                      <div class="card-header text-center flex-column" style="flex: auto">
+                        <h5><img src="assets/img/team.svg" width="35"> Total Manpower</h5>
+                        <h2>{{ result.count.total_user }}</h2>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-4 col-sm-4 col-container">
+                    <div class="card col-cell">
+                      <div class="card-header text-center flex-column" style="flex: auto">
+                        <h5><img src="assets/img/module.svg" width="35"> Total Courses</h5>
+                        <h2>{{ result.count.total_course }}</h2>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="row">
+                
+                <!-- <div class="col-lg-6 col-sm-6 col-container mx-auto">
+                  <div class="card col-cell">
+                    <div class="card-header text-center flex-column" style="flex: auto">
+                      <h5><img src="assets/img/browser.svg" width="35"> Form Builder Fields</h5>
+                      <div *ngIf="result.count.form_master_fields">
+                        <div *ngFor="let row of result.count.form_master_fields; let i=index">
+                          <h6> {{ row }}</h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+            </div>
+          </div>
+        </ng-container>
+    </section>
+</div>
